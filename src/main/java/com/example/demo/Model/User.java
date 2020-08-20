@@ -2,7 +2,8 @@
 package com.example.demo.Model;
 
 import java.io.Serializable;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 
@@ -17,14 +18,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-
-public class User implements Serializable  {
-    private static final long serialVersionUID = 1L;
-    
+@Table(name = "user")
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // mysql에 자동증가 기능있는데 타입이 위임이므로 걔로 위임
-    @Column(name = "userId", nullable = false, unique = true)
-    private Long userId;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private Long id;
     
     @Column(name = "userPassword", nullable = false)
     private String userPassword;
@@ -40,7 +39,10 @@ public class User implements Serializable  {
     
     @Column(name = "profileImage", nullable = true)
     private String profileImage;
-    
+
     @Column(name = "state", nullable = false)
     private String state;
+
+    @OneToMany(mappedBy = "user")
+    private List<Bidding> bidding = new ArrayList<>();
 }

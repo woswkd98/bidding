@@ -1,4 +1,5 @@
 package com.example.demo.Model;
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -8,15 +9,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Data
-@Entity(name ="review")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Review {
+@Entity(name ="review")
+@Table(name = "review")
+public class Review   {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // mysql에 자동증가 기능있는데 타입이 위임이므로 걔로 위임
-    @Column(name = "reviewId", nullable = false, unique = true)
-    private Long reviewId;
+    @Column(name = "review_id", nullable = false, unique = true)
+    private Long id;
 
     @Column(name = "grade", nullable = true)
     private float grade;
@@ -24,9 +27,11 @@ public class Review {
     @Column(name = "context", nullable = false)
     private String context;
     
-    @Column(name = "seller_sellerId", nullable = false)
-    private Long request_requestId;
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
 
-    @Column(name = "user_userId", nullable = false)
-    private Long user_userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

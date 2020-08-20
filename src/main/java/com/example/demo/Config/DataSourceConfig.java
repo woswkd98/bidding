@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jca.support.LocalConnectionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -25,7 +26,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJdbcRepositories(
+@EnableJpaRepositories(
     basePackages = "com.example.demo.repository.master"
 )
 public class DataSourceConfig {
@@ -37,6 +38,7 @@ public class DataSourceConfig {
         this.jpaProperties = jpaProperties;
         this.hibernateProperties = hibernateProperties;
     }
+
     @Bean
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource.master")
@@ -49,9 +51,10 @@ public class DataSourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
         var properties = hibernateProperties.determineHibernateProperties(
                 jpaProperties.getProperties(), new HibernateSettings());
-        return builder.dataSource(this.dataSource())
+
+            return builder.dataSource(this.dataSource())
                 .properties(properties)
-                .packages("com.examples.demo.repository.master.domain")
+                .packages("com.example.demo.Model")
                 .persistenceUnit("master")
                 .build();
     }

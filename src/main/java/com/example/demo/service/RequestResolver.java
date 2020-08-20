@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.coxautodev.graphql.tools.GraphQLResolver;
+import graphql.kickstart.tools.GraphQLResolver;
+import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+
+//import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.example.demo.Config.GetTimeZone;
 import com.example.demo.Model.ReqHasTag;
 import com.example.demo.Model.Request;
@@ -25,38 +29,33 @@ import lombok.RequiredArgsConstructor;
 
 
 @Component
-public class RequestResolver  implements GraphQLResolver<Request> {
+@GraphQLApi
+public class RequestResolver   {
+    private final RequestRepository requestRepository;
+    private final TagRepository tagRepository;
+    private final ReqHasTagRepository reqHasTagRepository;
+    private final UserRepository userRepository;
+    
+    @Autowired
+    public  RequestResolver( 
+        RequestRepository requestRepository,
+        TagRepository tagRepository, 
+        ReqHasTagRepository reqHasTagRepository,
+        UserRepository userRepository
+    ) {
 
-    @Autowired
-    private  RequestRepository requestRepository;
-    @Autowired
+        this.requestRepository = requestRepository;
+        this.tagRepository = tagRepository;
+        this.reqHasTagRepository = reqHasTagRepository;
+        this.userRepository = userRepository;
+    }
 
-    private  TagRepository tagRepository;
-    @Autowired
-    private  ReqHasTagRepository reqHasTagRepository;
-    @Autowired
-    private  UserRepository userRepository;
-    /*
-    query GetAllRequests{
-        getAllRequests{
-          _id
-          author {
-            _id
-            name
-          }
-          detail
-          category
-          requestedAt
-          deadLine
-          hopeDate
-          state
-          tags
-        }
-      }
-      */
-      /*
+
+    
+    
     @Transactional
-    public Request insertRequest( 
+    @GraphQLQuery(name = "sendRequest")
+    public Request sendRequest( 
         Long userId,
         String detail, 
         String category,
@@ -70,7 +69,7 @@ public class RequestResolver  implements GraphQLResolver<Request> {
         request.setDeadline(deadLine);
         request.setHopeDate(GetTimeZone.StringToDate(hopeDate));
         request.setUploadAt(GetTimeZone.StringToDate(GetTimeZone.getSeoulDate()));
-        request.setUser_userId(userId);
+        request.setUser(userRepository.getOne(userId));
         requestRepository.save(request);
             
         Tag tag = null;
@@ -90,9 +89,9 @@ public class RequestResolver  implements GraphQLResolver<Request> {
         }
         return request;
     }
-
+  /*
     public List<RequestGetter> getRequests() {
-
+      
         List<Request> requests = requestRepository.findAll();
 
         List<RequestGetter> getter = new ArrayList<RequestGetter>();
@@ -102,21 +101,24 @@ public class RequestResolver  implements GraphQLResolver<Request> {
         for(int i =0; i < size; ++i) {
             tempRq = requests.get(i);
             rg.setRequest(tempRq);
-            User user = userRepository.findById(tempRq.getUser_userId()).orElse(null);
+            User user = tempRq.getUser();
             if(user == null) {
                 System.out.println("getRequests 여기서 유저를 못찾음");
                 return null;
             }
-            rg.setUserId(user.getUserId());
+            rg.setUserId(user.getId());
             rg.setUserName(user.getUserName());
-            rg.setTags(tagRepository.getTagContextsByRequest(tempRq.getRequestId()));
+
+            
+
+            rg.getTags().add();
             getter.add(rg);
         }
            
            
         return getter;
        
-    }*/
-
+    }
+    */
 
 }
