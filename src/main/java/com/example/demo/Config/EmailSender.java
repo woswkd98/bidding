@@ -63,7 +63,9 @@ public class EmailSender {
     }
 
     @PreDestroy
-    public void destroy() {}
+    public void destroy() {
+        
+    }
 
     public void sendMail(String email, int rand) {
         Message mimeMessage = new MimeMessage(session);

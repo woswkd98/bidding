@@ -20,6 +20,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "user")
 public class User  {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // mysql에 자동증가 기능있는데 타입이 위임이므로 걔로 위임
     @Column(name = "user_id", nullable = false, unique = true)

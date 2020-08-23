@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import graphql.kickstart.tools.GraphQLResolver;
-import io.leangen.graphql.annotations.GraphQLQuery;
-import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-
+import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 //import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.example.demo.Config.GetTimeZone;
 import com.example.demo.Model.ReqHasTag;
@@ -15,22 +12,24 @@ import com.example.demo.Model.Request;
 import com.example.demo.Model.Tag;
 import com.example.demo.Model.User;
 import com.example.demo.VO.RequestGetter;
+import com.example.demo.VO.TestId;
 import com.example.demo.repository.master.*;
 
 import com.fasterxml.jackson.databind.deser.ValueInstantiator.Gettable;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import graphql.ExecutionResult;
 import lombok.RequiredArgsConstructor;
 
 
 
 @Component
-@GraphQLApi
-public class RequestResolver   {
+public class RequestResolver  implements GraphQLQueryResolver {
     private final RequestRepository requestRepository;
     private final TagRepository tagRepository;
     private final ReqHasTagRepository reqHasTagRepository;
@@ -51,11 +50,8 @@ public class RequestResolver   {
     }
 
 
-    
-    
     @Transactional
-    @GraphQLQuery(name = "sendRequest")
-    public Request sendRequest( 
+    public Request insertRequest( 
         Long userId,
         String detail, 
         String category,
@@ -118,7 +114,18 @@ public class RequestResolver   {
            
         return getter;
        
-    }
+    }s
     */
-
+    public int testGet(){
+        TestId ti = new TestId();
+        ti.setId(1L);
+        ti.setTitle("1234");
+        return 1;
+    }
+   
+ 
+    public String hello() {
+        
+        return "!1231254";
+    }
 }

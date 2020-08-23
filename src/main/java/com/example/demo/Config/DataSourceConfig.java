@@ -59,7 +59,6 @@ public class DataSourceConfig {
                 .build();
     }
 
-    
     @Bean
     @Primary
     PlatformTransactionManager transactionManager(EntityManagerFactoryBuilder builder) {

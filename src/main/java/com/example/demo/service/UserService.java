@@ -28,13 +28,14 @@ public class UserService implements CRUDInterface<User> {
     private final RedisTemplate redisTemplate;
     private final JwtProduct jwtProduct;
     private final EmailSender emailSender;
+    
     @Autowired
     public UserService(
         UserRepository userRepository, 
         RedisTemplate redisTemplate, 
         JwtProduct jwtProduct,
         EmailSender emailSender
-        ) {
+    ) {
         this.userRepository = userRepository;
         this.redisTemplate = redisTemplate;
         this.jwtProduct = jwtProduct;
@@ -104,15 +105,15 @@ public class UserService implements CRUDInterface<User> {
     public String sendVerifyNumByEmail(String userEmail) {
         HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
         int rand  = (int)(Math.random() * 100000);
-        hashOps.put(userHashKey, userEmail,String.valueOf(rand));
+        hashOps.put(emailHashKey, userEmail,String.valueOf(rand));
         emailSender.sendMail(userEmail, rand);
         return "성공";
     }
 
     public String verifyEmail(String userEmail, int number) {
         HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
-        if(Integer.valueOf(hashOps.get(userHashKey, userEmail)) == number) {
-            hashOps.delete(userHashKey, userEmail);
+        if(Integer.valueOf(hashOps.get(emailHashKey, userEmail)) == number) {
+            hashOps.delete(emailHashKey, userEmail);
             return "성공";
         }
         return "실패";

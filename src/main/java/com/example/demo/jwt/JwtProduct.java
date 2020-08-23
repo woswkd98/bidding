@@ -26,6 +26,7 @@ public class JwtProduct {
     
     private JWSSigner signer  = null;
     private JWSVerifier verifier = null;
+    
     @PostConstruct
     public void init() throws JOSEException {
         sharedSecret = new byte[32];

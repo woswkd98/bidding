@@ -5,22 +5,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import lombok.RequiredArgsConstructor;
-@Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-
+    
+    
     @Override
-    @Bean
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.httpBasic()
+        // 그냥 임시용 사실상  cors만 제거 해둔 기초
+        http.authorizeRequests().anyRequest().permitAll()
         .and()
-        .authorizeRequests().and().cors().and();
-            
-    }
-
- 
+        .httpBasic().disable()
+        .csrf().disable();
+        http.cors();
+    } 
 }

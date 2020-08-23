@@ -56,8 +56,14 @@ public class UserController {
     public String sendVerifyNumByEmail(@PathVariable String userEmail, @PathVariable int verifyNum) {     
         return userService.verifyEmail(userEmail,verifyNum);
     }
-    @RequestMapping(value = "http://localhost:3000/111",  method = RequestMethod.POST)  
-    public String qwet() {     
-        return "sadtfge";
-    }
+    /*
+    @RequestMapping("/graphql")
+    public String test(@RequestBody String query) {
+        System.out.println("12312512511111111111111111111111111");
+        System.out.println(query);
+        return "2";
+    }*/
+
+  
 }
+  
