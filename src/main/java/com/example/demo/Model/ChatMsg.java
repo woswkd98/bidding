@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "ChatMsg")
-@Table(name = "ChatMsg")
+@Table(name = "direction")
 public class ChatMsg {
 
     @Id
@@ -30,7 +30,7 @@ public class ChatMsg {
     private Long id;
     
     @Column(name = "room_id", nullable = false)
-    private Long roomId;
+    private String roomId;
 
     @Column(name = "userEmail", nullable = false)
     private String userName;

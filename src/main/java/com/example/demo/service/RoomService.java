@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-
 import org.springframework.beans.propertyeditors.CharsetEditor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -32,15 +31,15 @@ import com.example.demo.repository.master.ChatRepository;
 
 @Component
 @RequiredArgsConstructor
-public class ChatService {
+public class RoomService {
     
     private final RedisTemplate redisTemplate;
     private static final String ChattingRoomKey = "ChattingRoomKey";
     private Map<String, ChannelTopic> mapTopic;
     private HashOperations<String,String,ChattingRoom> hashOperations;
-    private final ChatRepository chatRepository;
+   
     private Sort sort;
-    private final RedisConnectionFactory factory;
+
     
     @PostConstruct
     public void init() {
@@ -49,8 +48,41 @@ public class ChatService {
         sort = Sort.by(Direction.ASC, "uploadAt");
 
     }
-   
-    public List<ChatMsg> getChatting(String roomId) {
-        return chatRepository.findByRoomIdOrderByUploadAtAsc(roomId);
-    }    
+
+    public Long RoomCount() {
+        return hashOperations.size(ChattingRoomKey);
+    }
+
+    public Map<String, ChattingRoom> getRooms() {
+        return hashOperations.entries(ChattingRoomKey);
+    }
+
+    public String createRoom(ChattingRoom room) {
+      
+        hashOperations.put(ChattingRoomKey, room.getRoom_id(), room);
+        return room.getRoom_id();
+    }
+
+    public Long deleteRoom(Long sellerId, Long buyerId) {
+        
+        return hashOperations.delete(ChattingRoomKey, String.valueOf(buyerId) +  String.valueOf(sellerId));
+    }
+
+    public void enterChattingRoom(String roomId) {
+
+        ChannelTopic topic = mapTopic.get(roomId);
+        if(topic == null) {
+
+            topic = new ChannelTopic(roomId);
+            mapTopic.put(roomId, topic);
+        }
+    }   
+
+    public ChannelTopic getTopic(String roomId) {
+        return mapTopic.get(roomId);
+    }
+
+    public Map<String, ChannelTopic> getTopics() {
+        return mapTopic;
+    }
 }

@@ -16,6 +16,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.example.demo.common.RegexPattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
@@ -28,10 +30,15 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @Component
+@RequiredArgsConstructor
 public class EmailSender {
+
+    private final RegexPattern pattern;
+
     private final String emailConfirmKey = "emailConfirmKey";
 
     String host = "smtp.naver.com";
@@ -68,6 +75,10 @@ public class EmailSender {
     }
 
     public void sendMail(String email, int rand) {
+        if(!pattern.isValidEmail(email)) {
+            return;
+        }
+
         Message mimeMessage = new MimeMessage(session);
         try {
             mimeMessage.setFrom(new InternetAddress("woswkd98@naver.com"));

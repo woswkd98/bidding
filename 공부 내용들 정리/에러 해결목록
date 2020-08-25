@@ -1,19 +1,2 @@
-//graphql 에서 이 디펜던시 쓰면 에러남
-	<dependency>
-    	<groupId>com.graphql-java</groupId>
-    	<artifactId>graphql-java-tools</artifactId>
-    	<version>5.2.4</version>
-	</dependency>
-	<dependency> // 
-    <groupId>com.graphql-java</groupId>
-    <artifactId>graphql-spring-boot-starter</artifactId>
-    <version>5.0.2</version>
-	</dependency>
 
-테스트 전에 security로 cors 해결해야함 이거 까먹었었음 웹플럭스로 했을땐 잘처리해서 했는데 내일 이거부터 고칠듯 
-rg.springframework.beans.factory.BeanCreationException: Error creating bean with name 'springSecurityFilterChain' defined in class path resource 
-이 에러뜨니 확실함 <- 이거 그래프 큐엘이랑 임베디드랑 충돌나서 그럼
-
-
-// 되는 예제 찾느라 죽는줄
-https://github.com/graphql-java-kickstart/graphql-spring-boot/tree/master/example/src/main/java/graphql/kickstart/spring/web/boot/sample
+@EnableWebSocketMessageBroker 메세지 브로커 쓸땐 이거 넣어줘야함 

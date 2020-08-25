@@ -19,8 +19,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class RequestGetter { // 리퀘스트 저장받을 떄 형식
-    private Request request;
     private Long userId;
     private String userName;
+    private Request request;
     private List<String> tags = new ArrayList<String>();
 }

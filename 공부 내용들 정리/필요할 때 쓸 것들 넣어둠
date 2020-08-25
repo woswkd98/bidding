@@ -1,1 +1,17 @@
-grahpqlkickstarter
+
+// 도커 레디스 실행 
+docker run --name redis -d -p 6379:6379 redis
+
+@Repository
+@Transactional
+public interface InventoryRepository extends PagingAndSortingRepository<Inventory, Long> {
+
+  List<Inventory> findByIdIn(List<Long> ids); // Serialized 하면 이렇게 쓰기 가능
+
+}
+
+// 이메일 정규표현식
+https://jamesdreaming.tistory.com/196
+
+// 자바 비밀번호 정규식
+https://cofs.tistory.com/358

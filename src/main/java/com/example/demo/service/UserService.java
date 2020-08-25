@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.demo.CRUDInterface;
 import com.example.demo.Config.EmailSender;
 import com.example.demo.Model.User;
+import com.example.demo.common.RegexPattern;
 import com.example.demo.jwt.JwtProduct;
 import com.example.demo.repository.master.*;
 import com.nimbusds.jose.JOSEException;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements CRUDInterface<User> {
 
     private static final String userHashKey = "userHashKey";
@@ -28,22 +30,11 @@ public class UserService implements CRUDInterface<User> {
     private final RedisTemplate redisTemplate;
     private final JwtProduct jwtProduct;
     private final EmailSender emailSender;
-    
-    @Autowired
-    public UserService(
-        UserRepository userRepository, 
-        RedisTemplate redisTemplate, 
-        JwtProduct jwtProduct,
-        EmailSender emailSender
-    ) {
-        this.userRepository = userRepository;
-        this.redisTemplate = redisTemplate;
-        this.jwtProduct = jwtProduct;
-        this.emailSender = emailSender;
-    }
+    private final RegexPattern pattern;
 
     @Override
     public User insert(User t) {
+        pattern.passwordChk(t.getUserPassword(), "", t.getUserEmail());
         return userRepository.save(t);
     }
 

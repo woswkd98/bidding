@@ -15,17 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
+
 
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @Autowired
-    public UserController (UserService userService) {
-        this.userService = userService;
-    }
 
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
     public User insert(User user) {
@@ -53,17 +52,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/email/{userEmail}/{verifyNum}",  method = RequestMethod.GET)  
-    public String sendVerifyNumByEmail(@PathVariable String userEmail, @PathVariable int verifyNum) {     
+    public String verifyNumByEmail(@PathVariable String userEmail, @PathVariable int verifyNum) {     
         return userService.verifyEmail(userEmail,verifyNum);
     }
-    /*
-    @RequestMapping("/graphql")
-    public String test(@RequestBody String query) {
-        System.out.println("12312512511111111111111111111111111");
-        System.out.println(query);
-        return "2";
-    }*/
-
+ 
+    
   
 }
   
