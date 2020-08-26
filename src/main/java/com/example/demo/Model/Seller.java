@@ -2,6 +2,7 @@ package com.example.demo.Model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.ArrayList;
 @Data
 @NoArgsConstructor
 @Getter
@@ -26,17 +28,9 @@ public class Seller {
     
     @Column(name = "portfolio", nullable = false)
     private String portfolio;
-    
-    @Column(name = "imageLink", nullable = false)
-    private String imageLink;
-    
 
-    @Column(name = "imageCount", nullable = false)
-    private int imageCount;
-    
     @Column(name = "sellerGrage", nullable = true)
     private Long sellerGrage;
-
 
     @Column(name = "reviewCount", nullable = true)
     private Long reviewCount;
@@ -47,6 +41,11 @@ public class Seller {
     @OneToOne
     @JoinColumn(name ="user_id")
     private User user;
-  
+    
+    @OneToMany(mappedBy = "seller") 
+    private List<SellerHasImg> seller_Has_Imgs = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "seller")
+    private List<Review> review = new ArrayList<>();
     
 }

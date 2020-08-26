@@ -2,10 +2,15 @@ package com.example.demo.service;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
-import com.example.demo.CRUDInterface;
+import javax.annotation.PostConstruct;
+
 import com.example.demo.Config.EmailSender;
+import com.example.demo.Model.Images;
 import com.example.demo.Model.User;
+import com.example.demo.VO.UserVO;
+import com.example.demo.common.JpaCrudServiceBase;
 import com.example.demo.common.RegexPattern;
 import com.example.demo.jwt.JwtProduct;
 import com.example.demo.repository.master.*;
@@ -17,52 +22,85 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements CRUDInterface<User> {
+public class UserService  {
 
     private static final String userHashKey = "userHashKey";
     private static final String emailHashKey = "emailHashKey";
-    private final UserRepository userRepository;
+
     private final RedisTemplate redisTemplate;
     private final JwtProduct jwtProduct;
     private final EmailSender emailSender;
     private final RegexPattern pattern;
+    private final UserRepository repository;
+    private final ImageRepository imageRepository;
+    private final ImageService imageService;
+    private  HashOperations<String, String, String> hashOps;
 
-    @Override
-    public User insert(User t) {
-        pattern.passwordChk(t.getUserPassword(), "", t.getUserEmail());
-        return userRepository.save(t);
+
+    @PostConstruct
+    public void init() {
+        hashOps = redisTemplate.opsForHash();
     }
 
-    @Override
-    public User update(User t) {
-        return userRepository.save(t); // 테스트 필요
+
+
+    public User insert(MultipartFile file, User t) {
+        if(pattern.passwordChk(t.getUserPassword(), "", t.getUserEmail())) {
+            return null;
+        }
+
+        if(pattern.isValidEmail(t.getUserEmail())) {
+            return null;
+        }
+        
+        User user = new User();
+        if(file != null) {
+            Images img = new Images();
+            
+            img.setUrl(imageService.upload(file));
+            user.setImages(img);
+            imageRepository.save(img);
+        }
+
+    
+        return this.repository.save(t);
+    }
+
+    // 업데이트 패스워드같은경우는 아이디가 있다는 경우므로 getone을 쓴다
+    public User updatePassword(long userId, String pwd) {
+        User user = repository.getOne(userId);
+        user.setUserPassword(pwd);
+        return repository.save(user);
     }
     
-    @Override
-    public List<User> selectAll() {
-        // TODO Auto-generated method stub
-        return userRepository.findAll();
+    public List<User> findAll() {
+        return repository.findAll();
     }
 
-    @Override
-    public void deleteByKey(Long Key) {
-        // TODO Auto-generated method stub
-        userRepository.deleteById(Key);
+    public User updateUserInfo(long id, String phone, String profileImage, String state) {
+        User user = repository.getOne(id);
+
+        if(phone != null) {
+            user.setPhone(phone);
+        }
+
+        return repository.save(user);
     }
 
-    @Override
-    public User selectByKey(Long key) {
-        // TODO Auto-generated method stub
-        return userRepository.findById(key).get();
+    public User setUserState(long id, int state) {
+          User user = repository.getOne(id);
+          user.setState(state);
+          return user;
     }
 
     public String verify(String userEmail) {
-        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
         try {
             if (jwtProduct.verify(hashOps.get(userHashKey, userEmail), userEmail)) {
                 return "성공";
@@ -75,8 +113,8 @@ public class UserService implements CRUDInterface<User> {
     }
 
     public String login(String userEmail, String userPassword) {
-        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
-        User user = userRepository.findByUserEmail(userEmail);
+        
+        User user = repository.findByUserEmail(userEmail);
         
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if(passwordEncoder.matches(userEmail, user.getUserPassword())) {
@@ -88,13 +126,13 @@ public class UserService implements CRUDInterface<User> {
     }
 
     public String logout(String userEmail) {
-        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+      
         hashOps.delete(userHashKey, userEmail);
         return "성공";
     }
 
     public String sendVerifyNumByEmail(String userEmail) {
-        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+
         int rand  = (int)(Math.random() * 100000);
         hashOps.put(emailHashKey, userEmail,String.valueOf(rand));
         emailSender.sendMail(userEmail, rand);
@@ -102,7 +140,7 @@ public class UserService implements CRUDInterface<User> {
     }
 
     public String verifyEmail(String userEmail, int number) {
-        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+
         if(Integer.valueOf(hashOps.get(emailHashKey, userEmail)) == number) {
             hashOps.delete(emailHashKey, userEmail);
             return "성공";

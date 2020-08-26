@@ -6,6 +6,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.demo.Model.User;
+import com.example.demo.VO.UserVO;
 import com.example.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +28,13 @@ public class UserController {
 
 
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
-    public User insert(User user) {
-        return userService.insert(user);
+    public User insert(UserVO user) {
+        return null;// 
     }
     
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public List<User> selectAll() {
-        return userService.selectAll();
-    }
-
-    @RequestMapping(value = "/users", method = RequestMethod.PATCH)
-    public User update(User user) {     
-        return userService.update(user);
+        return userService.findAll();
     }
 
     @RequestMapping(value = "/verify/{userEmail}", method = RequestMethod.GET)  
@@ -55,8 +51,5 @@ public class UserController {
     public String verifyNumByEmail(@PathVariable String userEmail, @PathVariable int verifyNum) {     
         return userService.verifyEmail(userEmail,verifyNum);
     }
- 
-    
-  
 }
   

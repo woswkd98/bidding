@@ -35,7 +35,7 @@ public class GetTimeZone {
     public static Date StringToDate(String Date) {
 
         try {
-            return dfOnlyDate.parse(Date);
+            return df.parse(Date);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

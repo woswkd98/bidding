@@ -19,7 +19,7 @@ public class ChatPub {
    
 
     public void publish(ChannelTopic topic, ChatMsg msg) {        
-        
+        System.out.println("Test2");
         redisTemplate.convertAndSend(topic.getTopic(), msg);
     }
 }

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,25 +53,28 @@ public class ChatController {
     public void message(SendingMsg msg) {
         System.out.println("message");
         ChatMsg newMsg = new ChatMsg();
+        
         newMsg.setUploadAt(GetTimeZone.StringToDate(GetTimeZone.getSeoulDate()));
-        newMsg.setUserName(msg.getUsername());
+        newMsg.setUserName(msg.getUserName());
         newMsg.setContext(msg.getContext());
         newMsg.setRoomId(msg.getRoomId());
+        
         ChannelTopic topic = chatService.getTopic(newMsg.getRoomId());
-
+        
+        
         chatPub.publish(topic, newMsg);
     }
 
     @RequestMapping(value = "/rooms", method = RequestMethod.PUT)
     public String createRoom(@RequestBody ChattingRoom room) {
  
-        String roomId = UUID.randomUUID().toString();
-        chatService.enterChattingRoom(roomId);
-        room.setRoom_id(roomId);
+        System.out.println(room.getRoom_id());
+        chatService.enterChattingRoom(room.getRoom_id());
+        room.setRoom_id(room.getRoom_id());
         chatService.createRoom(room);
-        ChannelTopic channel = chatService.getTopic(roomId);
+        ChannelTopic channel = chatService.getTopic(room.getRoom_id());
         redisMessageListener.addMessageListener(chatSub, channel);
-        return roomId;
+        return room.getRoom_id();
     }    
 
     @RequestMapping(value = "/rooms", method = RequestMethod.GET)
@@ -82,18 +86,6 @@ public class ChatController {
     public Set<String> getAllTopics() {
         return chatService.getTopics().keySet();
     }
-    @RequestMapping(value = "/rooms/{roomId}", method = RequestMethod.HEAD)
-    public String enterRoom(@PathVariable String roomId) {
-        chatService.enterChattingRoom(roomId);
-        
-       
-
-        ChannelTopic channel = chatService.getTopic(roomId);
-        
-        redisMessageListener.addMessageListener(chatSub, channel);
-        return "comein";
-    }
-
 
     @RequestMapping(value = "/rooms", method = RequestMethod.DELETE)
     public String deleteRoom(@PathVariable String roomId) {
@@ -121,5 +113,8 @@ public class ChatController {
     }
 
 
-   
+    @RequestMapping(value = "/chats/{roomId}", method = RequestMethod.GET) 
+    public List<ChatMsg> getChatMsgs(@RequestParam String roomId) {
+        return chatService.getChattingList(roomId);
+    } 
 }

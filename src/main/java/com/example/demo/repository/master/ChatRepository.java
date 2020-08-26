@@ -10,8 +10,5 @@ import java.util.List;
 import com.example.demo.Model.*;
 @Repository
 public interface ChatRepository extends JpaRepository<ChatMsg, Long> {
-    
-   
     List<ChatMsg> findByRoomIdOrderByUploadAtAsc(String room_id);
-    
 }

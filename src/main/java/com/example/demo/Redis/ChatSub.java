@@ -28,10 +28,14 @@ public class ChatSub implements MessageListener {
         String pubMsg = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
         ChatMsg msg = null;
         System.out.print("test");
+
+        
         try {
             msg = objectMapper.readValue(pubMsg, ChatMsg.class);
-            
-
+            msg.setState(1);
+            System.out.print(msg.getRoomId());
+            System.out.println(msg.getContext());    
+            System.out.println(msg.getUploadAt());    
         } catch (JsonProcessingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

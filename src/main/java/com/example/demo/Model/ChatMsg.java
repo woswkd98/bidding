@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "ChatMsg")
-@Table(name = "direction")
+@Table(name = "ChatMsg")
 public class ChatMsg {
 
     @Id

@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SendingMsg {
     private String roomId;
-    private String username;
+    private String userName;
     private String context;
 }

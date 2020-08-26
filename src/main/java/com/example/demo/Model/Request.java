@@ -57,4 +57,6 @@ public class Request  {
     // 다대다를 표현하기위해서 씀
     @OneToMany(mappedBy = "request")
     private List<ReqHasTag> request_Has_Tag = new ArrayList<>();
+
+  
 }

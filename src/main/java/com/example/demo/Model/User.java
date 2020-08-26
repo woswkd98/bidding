@@ -38,12 +38,18 @@ public class User  {
     @Column(name = "phone", nullable = true)
     private String phone;
     
-    @Column(name = "profileImage", nullable = true)
-    private String profileImage;
+
 
     @Column(name = "state", nullable = false)
-    private String state;
+    private int state;
 
     @OneToMany(mappedBy = "user")
     private List<Bidding> bidding = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name ="user_id")
+    private Images images;
+
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews = new ArrayList<>();
 }

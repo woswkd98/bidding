@@ -2,12 +2,12 @@ package com.example.demo.DAO;
 
 import java.util.List;
 
-import com.example.demo.CRUDInterface;
+import com.example.demo.common.*;
 import com.example.demo.Model.User;
 import com.example.demo.repository.master.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+/*
 public class UserDAO implements CRUDInterface<User> {
 
     private final UserRepository userRepository;
@@ -43,4 +43,4 @@ public class UserDAO implements CRUDInterface<User> {
 	}
 
     
-}
+}*/
