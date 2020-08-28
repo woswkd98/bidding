@@ -27,6 +27,10 @@ public class Review  {
     @Column(name = "context", nullable = false)
     private String context;
     
+    @Column(name = "uploadAt", nullable = false)
+    private Date uploadAt;
+
+
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private Seller seller;

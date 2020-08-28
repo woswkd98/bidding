@@ -51,26 +51,38 @@ public class UserService  {
 
 
 
-    public User insert(MultipartFile file, User t) {
-        if(pattern.passwordChk(t.getUserPassword(), "", t.getUserEmail())) {
+    public User insert(String userPassword,
+    String userEmail,
+     String userName,
+    String phone,
+    MultipartFile multipartFile) {
+        /*
+        if(pattern.passwordChk(userPassword, "", userEmail)) {
             return null;
         }
 
-        if(pattern.isValidEmail(t.getUserEmail())) {
+        if(pattern.isValidEmail(userEmail)) {
             return null;
-        }
-        
+        }*/
+       
         User user = new User();
-        if(file != null) {
+        if(multipartFile != null) {
             Images img = new Images();
             
-            img.setUrl(imageService.upload(file));
+            img.setUrl(imageService.upload(multipartFile));
             user.setImages(img);
             imageRepository.save(img);
         }
+        user.setPhone(phone);
+        user.setState("1`234");
+        user.setUserEmail(userEmail);
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setUserPassword(encoder.encode(userPassword));
+        user.setUserName(userName);
+        
     
-        return this.repository.save(t);
+        return this.repository.save(user);
     }
 
     // 업데이트 패스워드같은경우는 아이디가 있다는 경우므로 getone을 쓴다
@@ -94,7 +106,7 @@ public class UserService  {
         return repository.save(user);
     }
 
-    public User setUserState(long id, int state) {
+    public User setUserState(long id, String state) {
           User user = repository.getOne(id);
           user.setState(state);
           return user;

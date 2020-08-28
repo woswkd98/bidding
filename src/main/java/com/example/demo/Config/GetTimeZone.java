@@ -4,6 +4,8 @@ import java.text.*;
 import java.util.Date;
 import java.util.TimeZone;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class GetTimeZone {
 
     private static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

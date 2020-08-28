@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import lombok.Getter;
@@ -13,12 +14,18 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.ColumnDefault;
+
 @Data
 @Entity(name ="user")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "user")
+
 public class User  {
     
     @Id
@@ -29,7 +36,7 @@ public class User  {
     @Column(name = "userPassword", nullable = false)
     private String userPassword;
     
-    @Column(name = "userEmail", nullable = false, unique = true)
+    @Column(name = "userEmail", nullable = false)
     private String userEmail;
     
     @Column(name = "userName", nullable = false)
@@ -38,18 +45,17 @@ public class User  {
     @Column(name = "phone", nullable = true)
     private String phone;
     
-
-
     @Column(name = "state", nullable = false)
-    private int state;
 
-    @OneToMany(mappedBy = "user")
-    private List<Bidding> bidding = new ArrayList<>();
+    private String state;
+
+  
 
     @OneToOne
     @JoinColumn(name ="user_id")
     private Images images;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 }

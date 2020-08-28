@@ -1,2 +1,12 @@
 
 @EnableWebSocketMessageBroker 메세지 브로커 쓸땐 이거 넣어줘야함 
+엔티티에 널값들어가면 에러
+not-null property references a null or transient value : com.example.demo.Model.Seller.state
+
+엔티티의 영속성과 관련된 에러 라고 생각했지만
+https://m.blog.naver.com/PostView.nhn?blogId=gracefulife&logNo=220561551180&proxyReferer=https:%2F%2Fwww.google.com%2F
+// dto를 만든다에 대한설명
+https://okky.kr/article/328445
+
+// Hibernate5Module Bean을 써서 모듈 등록
+https://lelecoder.com/141

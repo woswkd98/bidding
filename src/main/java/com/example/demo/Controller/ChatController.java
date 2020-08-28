@@ -51,12 +51,12 @@ public class ChatController {
 
     @MessageMapping("/chat") 
     public void message(SendingMsg msg) {
-        System.out.println("message");
+        
         ChatMsg newMsg = new ChatMsg();
         
         newMsg.setUploadAt(GetTimeZone.StringToDate(GetTimeZone.getSeoulDate()));
         newMsg.setUserName(msg.getUserName());
-        newMsg.setContext(msg.getContext());
+        newMsg.setMessage(msg.getContext());
         newMsg.setRoomId(msg.getRoomId());
         
         ChannelTopic topic = chatService.getTopic(newMsg.getRoomId());
@@ -104,11 +104,7 @@ public class ChatController {
             ms.setRoomId("125" + i);
             temp.add(ms);
         }
-       
-
         test.put("chats", temp);
-        
-        
         return test;
     }
 

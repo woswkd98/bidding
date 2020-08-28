@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import lombok.Getter;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "sellerHasImg")
 @Table(name = "sellerHasImg")
 public class SellerHasImg {

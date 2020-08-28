@@ -2,7 +2,10 @@ package com.example.demo.VO;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /*  
@@ -31,12 +34,12 @@ private List<Bidding> bidding = new ArrayList<>();
 @JoinColumn(name ="user_id")
 private Images images;
 */
-@Getter
-@Setter
+@Data
+
 public class UserVO {
     private String userPassword;
     private String userEmail;
     private String userName;
     private String phone;
-    private MultipartFile multipartFile;
+    private MultipartFile file;
 }

@@ -13,9 +13,11 @@ import com.example.demo.repository.master.SellerHasImgRepo;
 import com.example.demo.repository.master.SellerRepository;
 import com.example.demo.repository.master.UserRepository;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartResolver;
 
 import lombok.RequiredArgsConstructor;
 
@@ -94,4 +96,7 @@ public class ImageService {
     public void deleteImage(String key) {
         s3Client.deleteObject(bucket, key);
     }
+
+  
+ 
 }

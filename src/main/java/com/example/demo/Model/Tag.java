@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import lombok.Getter;
@@ -14,6 +16,7 @@ import lombok.Setter;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity(name = "tag")

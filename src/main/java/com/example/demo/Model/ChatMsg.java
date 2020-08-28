@@ -35,8 +35,8 @@ public class ChatMsg {
     @Column(name = "userEmail", nullable = false)
     private String userName;
 
-    @Column(name = "context" , nullable = false)
-    private String context;
+    @Column(name = "message" , nullable = false)
+    private String message;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "uploadAt" , nullable = false)

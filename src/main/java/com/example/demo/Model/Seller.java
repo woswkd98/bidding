@@ -6,6 +6,11 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.ColumnDefault;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import lombok.Getter;
@@ -13,7 +18,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.ArrayList;
 @Data
+
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity(name ="seller")
@@ -29,23 +36,33 @@ public class Seller {
     @Column(name = "portfolio", nullable = false)
     private String portfolio;
 
-    @Column(name = "sellerGrage", nullable = true)
-    private Long sellerGrage;
+    @Column(name = "sumGrage", nullable = true)
+    @ColumnDefault("0") //default 0
+    private float sumRate;
 
     @Column(name = "reviewCount", nullable = true)
+    @ColumnDefault("0") //default 0
     private Long reviewCount;
 
-    @Column(name = "state", nullable = false)
+   
+    @Column(name = "state", nullable = true)
+    @ColumnDefault("0") //default 0
     private String state;
     
     @OneToOne
     @JoinColumn(name ="user_id")
     private User user;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "seller") 
     private List<SellerHasImg> seller_Has_Imgs = new ArrayList<>();
     
+    @JsonIgnore
     @OneToMany(mappedBy = "seller")
     private List<Review> review = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "seller")
+    private List<Bidding> bidding = new ArrayList<>();
     
 }

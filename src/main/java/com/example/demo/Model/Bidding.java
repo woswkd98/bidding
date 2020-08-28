@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import lombok.Getter;
@@ -14,11 +15,11 @@ import lombok.Setter;
 @Entity(name = "bidding")
 @Table(name = "bidding")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Bidding  {
-
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // mysql에 자동증가 기능있는데 타입이 위임이므로 걔로 위임
     @Column(name = "bidding_id", nullable = false, unique = true)
@@ -39,8 +40,8 @@ public class Bidding  {
     private Request request;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "seller_id")
+    private Seller seller;
 
     
 }
