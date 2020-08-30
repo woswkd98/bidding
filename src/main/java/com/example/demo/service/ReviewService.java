@@ -66,7 +66,6 @@ public class ReviewService {
         Seller seller = sellerRepository.findById(sellerId).get();
         System.out.println(seller.getReview().size());
         return seller.getReview();
-   
     }
 
     

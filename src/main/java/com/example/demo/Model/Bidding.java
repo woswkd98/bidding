@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -29,10 +31,14 @@ public class Bidding  {
     @Column(name = "uploadAt", nullable = false)
     private Date uploadAt;
     
+    @Column(name = "context", nullable = false)
+    private String context;
+    
     @Column(name = "price", nullable = false)
     private int price;
 
     @Column(name = "state", nullable = false)
+    @ColumnDefault("0")
     private String state;
     
     @ManyToOne

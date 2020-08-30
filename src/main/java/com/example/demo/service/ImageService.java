@@ -6,6 +6,8 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.demo.Model.Images;
 import com.example.demo.common.JpaCrudServiceBase;
 import com.example.demo.repository.master.ImageRepository;
@@ -34,7 +36,6 @@ import java.util.List;
 
 
 @Component
-
 public class ImageService {
 
     private AmazonS3 s3Client;
@@ -61,32 +62,52 @@ public class ImageService {
 
     public List<String> upload(MultipartFile files[]) {
         List<String> urlList = new ArrayList<>();
-
         for(int i =0; i < files.length; ++i) {
-            File convFile = null;
+            System.out.println(files[i].getOriginalFilename());
+
+        }
+        
+        /*
+        for(int i =0; i < files.length; ++i) {
+        
             try {
-                convFile = new File(files[i].getOriginalFilename());
+                ObjectMetadata omd = new ObjectMetadata();
+                omd.setContentType(files[i].getContentType());
+                omd.setContentLength(files[i].getSize());
+                omd.setHeader("filename", files[i].getOriginalFilename());
+        
                 String strID = files[i].getOriginalFilename();
-                s3Client.putObject(bucket,  strID, convFile);
+                s3Client.putObject(new PutObjectRequest(bucket, strID, files[i].getInputStream(), omd));
                 s3Client.setObjectAcl(bucket,strID,CannedAccessControlList.PublicRead);
                 urlList.add(s3Client.getUrl(bucket, strID).toString());
-            } catch (NullPointerException e) {
+            } catch (IOException e) {
                 //TODO: handle exception
             } 
-        }
+        } */
         return urlList;
     }
 
     public String upload(MultipartFile files) {
         File convFile = null;
         String strID = null;
+        if(s3Client == null) {
+            System.out.print("asdgfasd");
+            return "awetgawet";
+        }
+
         try {
+            ObjectMetadata omd = new ObjectMetadata();
+            omd.setContentType(files.getContentType());
+            omd.setContentLength(files.getSize());
+            omd.setHeader("filename", files.getOriginalFilename());
+
             convFile = new File(files.getOriginalFilename());
             strID = files.getOriginalFilename();
-            s3Client.putObject(bucket,  strID, convFile);
+            s3Client.putObject(new PutObjectRequest(bucket, strID, files.getInputStream(), omd));
             s3Client.setObjectAcl(bucket,strID,CannedAccessControlList.PublicRead);
+
             
-        } catch (NullPointerException e) {
+        } catch (IOException e) {
             //TODO: handle exception
         } 
         

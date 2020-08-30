@@ -38,5 +38,5 @@ public class Images {
     private String url;
 
     @OneToMany(mappedBy = "images") 
-    private List<SellerHasImg> seller_Has_Imgs = new ArrayList<>();
+    private List<SellerHasImg> sellerHasImgs = new ArrayList<>();
 }

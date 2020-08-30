@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,15 +52,27 @@ public class SellerController {
 
     private final SellerService sellerService;
 
-    @RequestMapping(value = "/sellers", method = RequestMethod.POST) 
-    //  이미지 전에 임시
+    @RequestMapping(value = "/sellers", method = RequestMethod.PUT) 
     public Seller insertSeller(@RequestBody SellerVo vo)  {
-
-
        return sellerService.insertSeller(vo);
     }
-
+    @RequestMapping(value = "/sellers/{sellerId}", method = RequestMethod.POST) 
+    public List<String> insertSellerImage(@RequestParam("file") MultipartFile files[], @PathVariable long sellerId) {
+        System.out.println("String");
+        System.out.println(files.length);
+        //return null;
+        return sellerService.insertImage(files, sellerId);
+    }
+    @RequestMapping(value = "/sellers", method = RequestMethod.GET) 
     public List<Seller> getSeller() {
         return sellerService.findAll();
+    }
+    @RequestMapping(value = "/sellers/{sellerId}", method = RequestMethod.GET) 
+    public Map<String, Object> getSellerId(@PathVariable long sellerId) {
+        Seller seller = sellerService.findById(sellerId).get();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("seller", seller);
+        map.put("image", sellerService.getImageBySellerId(sellerId));
+        return map;
     }
 }

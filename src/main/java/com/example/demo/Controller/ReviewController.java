@@ -37,8 +37,7 @@ public class ReviewController {
     public List<Review> getReviewsBySeller(
         @PathVariable("id") long sellerId
     ) {
-        System.out.println(sellerId);
-      return  reviewService.getReviewsBySeller(sellerId);
+        return  reviewService.getReviewsBySeller(sellerId);
     }
 
     
@@ -48,6 +47,7 @@ public class ReviewController {
     ) {
        return reviewService.getReviewsByUser(userId);
     }
+
     @RequestMapping(value = "/reviews", method = RequestMethod.GET)
     public List<Review> getAllReview(
     ) {

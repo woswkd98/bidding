@@ -55,7 +55,7 @@ public class Seller {
     
     @JsonIgnore
     @OneToMany(mappedBy = "seller") 
-    private List<SellerHasImg> seller_Has_Imgs = new ArrayList<>();
+    private List<SellerHasImg> sellerHasImgs = new ArrayList<>();
     
     @JsonIgnore
     @OneToMany(mappedBy = "seller")

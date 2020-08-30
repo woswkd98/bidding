@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -32,9 +34,11 @@ public class Tag {
     private String context;
     
     @Column(name = "bidCount", nullable = false)
+    @ColumnDefault("0") //default 0
     private int bidCount;
     
     @Column(name = "requestCount", nullable = false)
+    @ColumnDefault("1") //default 0
     private int requestCount;
 
     // 태그와 요청과의 관계가 다대다 

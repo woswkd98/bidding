@@ -49,40 +49,42 @@ public class UserService  {
         hashOps = redisTemplate.opsForHash();
     }
 
-
-
-    public User insert(String userPassword,
-    String userEmail,
-     String userName,
-    String phone,
-    MultipartFile multipartFile) {
-        /*
-        if(pattern.passwordChk(userPassword, "", userEmail)) {
-            return null;
+    public String insertImage(long userId, MultipartFile file) {
+        User user = repository.findById(userId).get();
+        if(user == null) {
+            return "userId가 없다";
         }
 
-        if(pattern.isValidEmail(userEmail)) {
-            return null;
-        }*/
+        Images img = new Images();
+            
+        img.setUrl(imageService.upload(file));
+        user.setImages(img);
+        imageRepository.save(img);
+        repository.save(user);
+        return img.getUrl();
+    } 
+
+    public String insert(UserVO vo) {
+        
+        if(pattern.passwordChk(vo.getUserPassword(), "", vo.getUserEmail())) {
+            return "비밀번호가 맞지 않는다";
+        }
+
+        if(pattern.isValidEmail(vo.getUserEmail())) {
+            return "이메일 형식이 아니다";
+        }
        
         User user = new User();
-        if(multipartFile != null) {
-            Images img = new Images();
-            
-            img.setUrl(imageService.upload(multipartFile));
-            user.setImages(img);
-            imageRepository.save(img);
-        }
-        user.setPhone(phone);
+    
+        user.setPhone(vo.getPhone());
         user.setState("1`234");
-        user.setUserEmail(userEmail);
+        user.setUserEmail(vo.getUserEmail());
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setUserPassword(encoder.encode(userPassword));
-        user.setUserName(userName);
+        user.setUserPassword(encoder.encode(vo.getUserPassword()));
+        user.setUserName(vo.getUserName());
         
-    
-        return this.repository.save(user);
+        return repository.save(user).getId().toString();
     }
 
     // 업데이트 패스워드같은경우는 아이디가 있다는 경우므로 getone을 쓴다
@@ -159,5 +161,4 @@ public class UserService  {
         }
         return "실패";
     }
-
 }

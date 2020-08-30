@@ -35,7 +35,10 @@ private List<Bidding> bidding = new ArrayList<>();
 private Images images;
 */
 @Data
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserVO {
     private String userPassword;
     private String userEmail;

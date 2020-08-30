@@ -14,9 +14,6 @@ import lombok.RequiredArgsConstructor;
 public class ChatPub {
 
     private final RedisTemplate<String, Object> redisTemplate;
-    
-
-   
 
     public void publish(ChannelTopic topic, ChatMsg msg) {        
         System.out.println("Test2");

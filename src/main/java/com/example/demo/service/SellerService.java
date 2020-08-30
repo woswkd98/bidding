@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,27 +41,43 @@ public class SellerService {
         Seller seller = new Seller();
  
         seller.setPortfolio(vo.getPortfolio());
-        System.out.print("12222222222222222222222");
         seller.setReviewCount(0L);
         User user = userRepository.findById(vo.getId()).get();
         user.getUserName();
    
         seller.setUser(user);
-       // seller.setUser(user);
-        /*
-        for(int i = 0; i < urls.size(); ++i) {
-            Images image = new Images();
-            image.setUrl(urls.get(i));
-            
-            SellerHasImg sellerHasImg = new SellerHasImg();
-            sellerHasImg.setImages(image);
-            sellerHasImg.setSeller(seller);
-            sellerHasImgRepo.save(sellerHasImg);
-            imageRepository.save(image);
-        }*/
+     
         return sellerRepository.save(seller);
         
     } 
+
+    public List<String> insertImage(MultipartFile files[], long sellerId) {
+        
+        Seller seller = sellerRepository.findById(sellerId).get();
+        
+        if(seller == null) {
+            return null;
+        }
+
+        
+        List<String> urls = new ArrayList<>();
+        System.out.print("asdf");
+        for(int i = 0; i < files.length; ++i) {
+            Images image = new Images();
+            image.setUrl(imageService.upload(files[i]));
+            imageRepository.save(image);
+            SellerHasImg sellerHasImg = new SellerHasImg();
+            sellerHasImg.setImages(image);
+            sellerHasImg.setSeller(seller);
+            
+            sellerHasImgRepo.save(sellerHasImg);
+           
+            urls.add(image.getUrl());
+        }
+
+        return urls;
+
+    }
     
     public List<Seller> findAll() {
         return sellerRepository.findAll();
@@ -73,5 +90,11 @@ public class SellerService {
     public Optional<Seller> findById(long id) {
         return sellerRepository.findById(id);
     }
+
+    public List<Images> getImageBySellerId(long sellerId) {
+        return imageRepository.getImgBySeller(sellerId);
+    }
+
+
    
 }

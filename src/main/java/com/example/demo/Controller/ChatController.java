@@ -15,6 +15,7 @@ import com.example.demo.Redis.ChatPub;
 import com.example.demo.Redis.ChatSub;
 import com.example.demo.VO.ChattingRoom;
 import com.example.demo.VO.SendingMsg;
+import com.example.demo.repository.master.ChatRepository;
 import com.example.demo.service.ChatService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,32 +83,12 @@ public class ChatController {
         return chatService.getRooms();
     }
 
-    @RequestMapping(value = "/rooms/test/topic", method = RequestMethod.GET)
-    public Set<String> getAllTopics() {
-        return chatService.getTopics().keySet();
-    }
-
     @RequestMapping(value = "/rooms", method = RequestMethod.DELETE)
     public String deleteRoom(@PathVariable String roomId) {
         ChannelTopic channel = chatService.getTopic(roomId);
         redisMessageListener.removeMessageListener(chatSub, channel);
         return "deleteRoom";
     }
-
-    @RequestMapping(value = "/rooms/{roomId}", method = RequestMethod.GET)
-    public Map<String, Object> getChats(@PathVariable String roomId) {
-        Map<String, Object> test = new HashMap<String, Object>();
-        List<ChatMsg> temp = new ArrayList<ChatMsg>();
-        for(int i =0 ; i< 5; ++i) {
-            ChatMsg ms = new ChatMsg();
-            ms.setId(15215L);
-            ms.setRoomId("125" + i);
-            temp.add(ms);
-        }
-        test.put("chats", temp);
-        return test;
-    }
-
 
     @RequestMapping(value = "/chats/{roomId}", method = RequestMethod.GET) 
     public List<ChatMsg> getChatMsgs(@RequestParam String roomId) {
