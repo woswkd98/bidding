@@ -1,0 +1,7 @@
+
+도커 툴 박스 설치할때 가상화 켜놔도 amd에서 안켰다고 에러뜨는데 바로 체킹안하는걸로 파워쉘에서 실행시키면 된다
+ docker-machine create -d virtualbox --virtualbox-memory=4096  --virtualbox-cpu-count=4 --virtualbox-disk-size=40960  --virtualbox-no-vtx-check default
+
+
+https://www.jhipster.tech/tips/020_tip_using_docker_containers_as_localhost_on_mac_and_windows.html
+도커 포트 연결 기본적으로 가상이라 호스트가 다른데 포트번호 연결함
