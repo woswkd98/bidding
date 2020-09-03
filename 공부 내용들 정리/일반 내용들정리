@@ -9,4 +9,11 @@ find는 select 문을 실행시키는 함수다
 처음시작은 repository함수를 자동으로 생성해주는 부모 클래스를 만들자 JpaCrudServiceBase
 근데 다대다 매핑용도 만들 수 있을 것 같은데? 라고 해서 만들려는게 JpaCrudManyToManyServiceBase
 근데 그러면은 연결엔티티가 얘를 들고 있어야 하는데 그러면 또 부모 엔티티가 필요하다 그래서 만든다 
-ConnEntityBase 여기에 쓰이는게 MappingSuperClass
+ConnEntityBase 여기에 쓰이는게 MappingSuperClass 하지만 실패해서 그냥 만들었구요
+
+jpa repository를 이용하면서 느낀건 객체안에 필요없는 데이터까지 다 들고 온다는점이다 
+1번방법은 DTO를 만든다 (interface방법)
+2번방법은 쿼리작성에 HashMap을 쓴다 
+
+걍 2번쓴다
+

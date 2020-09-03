@@ -8,3 +8,20 @@ https://www.jhipster.tech/tips/020_tip_using_docker_containers_as_localhost_on_m
 
 얘 때문에 오지게 헤멤 파일 확장자명 주의 아니면 못찾아서 에러띄운다
 Dockerfile은 확장명 없이 만들어야 합니다. Windows에서 이렇게 하려면 원하는 편집기로 파일을 만들고, 따옴표를 포함하여 "Dockerfile"로 저장하면 됩니다.
+
+
+docker pull openkbs/jdk11-mvn-py3
+docker pull mysql
+docker pull redis 
+
+docker build --tag app:1 .
+
+docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=1234 mysql:8.0.21
+docker ps 컨테이너 조회 
+
+docker exec -it e420aa7c26c8 /bin/bash // 리눅스 콘솔접속 저기 16진수  id는 ps로 찾고
+mysql -u root -p // mysql 실행 비번 입력시 1234
+create database bidding; 데이터 베이스 생성 여기까지만 하면됨
+docker run --name redis -d -p 6379:6379 redis
+
+docker run -p 1234:1234 app 

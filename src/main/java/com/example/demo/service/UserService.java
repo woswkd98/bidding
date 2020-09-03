@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.RequestEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,15 +47,10 @@ public class UserService  {
     private  HashOperations<String, String, String> hashOps;
 
 
-    @PostConstruct
-    public void init() {
-        hashOps = redisTemplate.opsForHash();
-    }
-
-    public String insertImage(long userId, MultipartFile file) {
+    public User insertImage(long userId, MultipartFile file) {
         User user = repository.findById(userId).get();
         if(user == null) {
-            return "userId가 없다";
+            return null;
         }
 
         Images img = new Images();
@@ -61,19 +59,38 @@ public class UserService  {
         user.setImages(img);
         imageRepository.save(img);
         repository.save(user);
-        return img.getUrl();
+        return user;
     } 
 
+    public String getImage(long userId) {
+        User user = repository.getOne(userId);
+        if(user.getImages() != null) {
+            return user.getImages().getUrl();
+        }
+        return "이미지 없음";
+    }
+
+    public List<Map<String, Object>> getAll() {
+        return repository.getAll();
+    }
+   
+    public List<Map<String, Object>> getUserByEmail(String email) {
+        return repository.getUserByEmail(email);
+    }
     public String insert(UserVO vo) {
         
-        if(pattern.passwordChk(vo.getUserPassword(), "", vo.getUserEmail())) {
+        if(!pattern.passwordChk(vo.getUserPassword(), "", vo.getUserEmail())) {
             return "비밀번호가 맞지 않는다";
         }
 
-        if(pattern.isValidEmail(vo.getUserEmail())) {
+        if(!pattern.isValidEmail(vo.getUserEmail())) {
             return "이메일 형식이 아니다";
         }
-       
+        
+        if(!pattern.phoneForm(vo.getPhone())) {
+            return "휴대폰 형식";
+        }
+
         User user = new User();
     
         user.setPhone(vo.getPhone());
@@ -87,10 +104,16 @@ public class UserService  {
         return repository.save(user).getId().toString();
     }
 
-    // 업데이트 패스워드같은경우는 아이디가 있다는 경우므로 getone을 쓴다
+    // 업데이트 패스워드같은경우는 아이디가 있다는 경우므로  쓴다
     public User updatePassword(long userId, String pwd) {
-        User user = repository.getOne(userId);
-        user.setUserPassword(pwd);
+        User user = repository.findById(userId).get();
+
+        if(!pattern.passwordChk(pwd, "", user.getUserEmail())) {
+            return null;
+        }
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setUserPassword(encoder.encode(pwd));
         return repository.save(user);
     }
     
@@ -114,9 +137,9 @@ public class UserService  {
           return user;
     }
 
-    public String verify(String userEmail) {
+    public String verify(String userEmail, String jwt) {
         try {
-            if (jwtProduct.verify(hashOps.get(userHashKey, userEmail), userEmail)) {
+            if (jwtProduct.verify(userEmail, jwt)) {
                 return "성공";
             }
         } catch (ParseException | JOSEException e) {
@@ -127,23 +150,18 @@ public class UserService  {
     }
 
     public String login(String userEmail, String userPassword) {
-        
+         
         User user = repository.findByUserEmail(userEmail);
         
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if(passwordEncoder.matches(userEmail, user.getUserPassword())) {
+        if(passwordEncoder.matches(userPassword, user.getUserPassword())) {
             String token = jwtProduct.getKey(user.getUserEmail());
-            hashOps.put(userHashKey, user.getUserEmail(),token);
-            return "성공";
+            
+            return token;
         }
-        return "실패";
+        return null;
     }
 
-    public String logout(String userEmail) {
-      
-        hashOps.delete(userHashKey, userEmail);
-        return "성공";
-    }
 
     public String sendVerifyNumByEmail(String userEmail) {
 

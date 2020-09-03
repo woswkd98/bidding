@@ -12,9 +12,9 @@ public interface ImageRepository extends JpaRepository<Images, Long> {
     
     @Query(value = "SELECT i.* FROM images i " +
     "INNER JOIN seller_has_img shi " +
-    //"ON i.images_id = shi.seller_has_img_id " +
+    "ON i.images_id = shi.images_id " +
     "INNER JOIN seller s " +
-    "ON s.seller_id = shi.seller_has_img_id " +
+    "ON s.seller_id = shi.seller_id " +
     "WHERE s.seller_id = :sellerId", nativeQuery = true)
-    public List<Images> getImgBySeller(long sellerId);
+    public List<Images> getImgBySeller( long sellerId);
 }

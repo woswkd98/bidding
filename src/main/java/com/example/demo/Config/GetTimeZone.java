@@ -45,5 +45,15 @@ public class GetTimeZone {
         return null;
     } 
 
+    public static Date StringToDateYMD(String date) {
+        
+        try {
+            return dfOnlyDate.parse(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

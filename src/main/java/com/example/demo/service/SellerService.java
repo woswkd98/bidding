@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.Model.Images;
 import com.example.demo.Model.Seller;
 import com.example.demo.Model.SellerHasImg;
 import com.example.demo.Model.User;
-import com.example.demo.VO.SellerVo;
+
 import com.example.demo.repository.master.ImageRepository;
 import com.example.demo.repository.master.SellerHasImgRepo;
 import com.example.demo.repository.master.SellerRepository;
@@ -34,34 +34,36 @@ public class SellerService {
     private final UserRepository userRepository;
 
  
-    @org.springframework.transaction.annotation.Transactional
-    public Seller insertSeller(SellerVo vo) {
+    @Transactional
+    public Seller insertSeller(long id, String portfolio, MultipartFile files[]) {
         //List<String> urls= imageService.upload(files);
-      
+        Optional<User> ops = userRepository.findById(id);
+        if(!ops.isPresent()) {
+            return null;
+        }
+        Seller oldSeller = sellerRepository.findByUserId(id);
+        if(oldSeller != null) {
+            return oldSeller;
+        }
+        User user = ops.get();
+
         Seller seller = new Seller();
  
-        seller.setPortfolio(vo.getPortfolio());
+        seller.setPortfolio(portfolio);
         seller.setReviewCount(0L);
-        User user = userRepository.findById(vo.getId()).get();
+        
         user.getUserName();
-   
+        insertImage(files, seller);
         seller.setUser(user);
-     
+        
         return sellerRepository.save(seller);
         
     } 
-
-    public List<String> insertImage(MultipartFile files[], long sellerId) {
-        
-        Seller seller = sellerRepository.findById(sellerId).get();
-        
-        if(seller == null) {
-            return null;
-        }
-
-        
+    @Transactional
+    private List<String> insertImage(MultipartFile files[], Seller seller) {
+           
         List<String> urls = new ArrayList<>();
-        System.out.print("asdf");
+
         for(int i = 0; i < files.length; ++i) {
             Images image = new Images();
             image.setUrl(imageService.upload(files[i]));
@@ -95,6 +97,7 @@ public class SellerService {
         return imageRepository.getImgBySeller(sellerId);
     }
 
+ 
 
    
 }

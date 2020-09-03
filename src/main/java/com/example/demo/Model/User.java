@@ -46,10 +46,7 @@ public class User  {
     private String phone;
     
     @Column(name = "state", nullable = false)
-
     private String state;
-
-  
 
     @OneToOne
     @JoinColumn(name ="user_id")

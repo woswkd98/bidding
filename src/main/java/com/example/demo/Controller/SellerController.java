@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.demo.Model.Seller;
-import com.example.demo.VO.SellerVo;
+import com.example.demo.service.ReviewService;
 import com.example.demo.service.SellerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,28 +51,48 @@ import lombok.RequiredArgsConstructor;
 public class SellerController {
 
     private final SellerService sellerService;
+    private final ReviewService reviewService;
+    @RequestMapping(value = "/sellers", method = RequestMethod.POST) 
+    public Seller insertSeller(
+        @RequestParam("file") MultipartFile files[], 
+        @RequestParam("userId") long userId, 
+        @RequestParam("portfolio") String portfolio)  
+    {
+        return  sellerService.insertSeller(userId,portfolio,files);
+    }
 
-    @RequestMapping(value = "/sellers", method = RequestMethod.PUT) 
-    public Seller insertSeller(@RequestBody SellerVo vo)  {
-       return sellerService.insertSeller(vo);
-    }
-    @RequestMapping(value = "/sellers/{sellerId}", method = RequestMethod.POST) 
-    public List<String> insertSellerImage(@RequestParam("file") MultipartFile files[], @PathVariable long sellerId) {
-        System.out.println("String");
-        System.out.println(files.length);
-        //return null;
-        return sellerService.insertImage(files, sellerId);
-    }
     @RequestMapping(value = "/sellers", method = RequestMethod.GET) 
     public List<Seller> getSeller() {
         return sellerService.findAll();
     }
+
     @RequestMapping(value = "/sellers/{sellerId}", method = RequestMethod.GET) 
     public Map<String, Object> getSellerId(@PathVariable long sellerId) {
         Seller seller = sellerService.findById(sellerId).get();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("seller", seller);
-        map.put("image", sellerService.getImageBySellerId(sellerId));
+        map.put("sellerId", seller.getId());
+        map.put("portfolio", seller.getPortfolio());
+        map.put("state", seller.getState());
+        map.put("phone", seller.getUser().getPhone());
+        if(seller.getUser().getImages() == null)
+            map.put("profileImage", null);
+        else map.put("profileImage", seller.getUser().getImages().getUrl());
+        map.put("userName", seller.getUser().getUserName());
+        map.put("userEmail", seller.getUser().getUserEmail());
+        map.put("review", reviewService.getReviewsBySeller(sellerId));
+        map.put("exampleImage", sellerService.getImageBySellerId(sellerId));
         return map;
     }
+
+    /*
+    @RequestMapping(value = "/sellers", method = RequestMethod.PATCH) 
+    public Seller updateSeller(
+        @RequestParam("file") MultipartFile files[], 
+        @RequestParam("portfolio") String portfolio
+        
+        )  
+    {
+        return  sellerService.insertSeller(userId,portfolio,files);
+    }*/
+
 }

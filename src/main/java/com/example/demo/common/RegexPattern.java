@@ -21,7 +21,7 @@ public class RegexPattern {
 
     public static final String pEmail = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
 
-
+    public static final String phone = "^01(?:0|1|[6-9])(\\d{3}|\\d{4})(\\d{4})$"; // 01 0 or 1 or 6~9 중간의 숫자 자리수가 3개 또는 4개 맨뒷자리는 4개 
 
     
     public Matcher m;
@@ -31,37 +31,45 @@ public class RegexPattern {
         m = Pattern.compile(pattern1).matcher(newPassword);
         if(m.find()) {
             check = true;
+            System.out.println(1);
         }
         
         m = Pattern.compile(pattern2).matcher(newPassword);
         if(m.find()) {
             check = true;
+            System.out.println(2);
         }
         
         m = Pattern.compile(pattern3).matcher(newPassword);
         if(m.find()) {
             check = true;
+            System.out.println(3);
         }
         
         m = Pattern.compile(pattern4).matcher(newPassword);
         if(m.find()) {
             check = true;
+            System.out.println(4);
         }
         
         if(check) {
             if(samePwd(newPassword)) {
+                System.out.println(1.1f);
                 return false;
             }
          
             if(continuousPwd(newPassword)) {
+                System.out.println(1.2f);
                 return false;
             }
          
             if(newPassword.equals(oldPassword)) {
+                System.out.println(1.3f);
                 return false;
             }
          
             if(sameId(newPassword, userId)) {
+                System.out.println(11.4f);
                 return false;
             }
         }
@@ -74,6 +82,15 @@ public class RegexPattern {
         
         return match.find() ? true : false;
     }
+
+    public boolean phoneForm(String phone) {
+        Matcher match = Pattern.compile(RegexPattern.phone).matcher(phone);
+        
+
+        
+        return match.find() ? true : false;
+    }
+
 
     public boolean continuousPwd(String pwd) {
         int o = 0;
