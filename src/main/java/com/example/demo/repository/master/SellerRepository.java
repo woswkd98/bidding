@@ -25,7 +25,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
     "select s.*, u.user_name, u.user_email, u.user_phone " +  
     "from seller s" + 
     "inner join user u on u.user_id = r.user_id " +
-    
     "where s.user_id = :sellerId", nativeQuery = true)
     public  List<Map<String, Object>> getSellerInfo(long sellerId);
 }

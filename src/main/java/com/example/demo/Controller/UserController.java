@@ -19,6 +19,9 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.http.codec.multipart.Part;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -72,10 +75,12 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(
+
         HttpServletResponse res,
         RequestEntity<Map<String, Object>> req
     ) {
         Map<String, Object> map = req.getBody();
+        
         String rs = userService.login(
             map.get("email").toString(), 
             map.get("pwd").toString());        
