@@ -35,25 +35,30 @@ public class SellerService {
 
  
     @Transactional
-    public Seller insertSeller(long id, String portfolio, MultipartFile files[]) {
+    public Seller insertSeller(long id, String portfolio,MultipartFile profile,  MultipartFile exampleImages[],String phone ) {
         //List<String> urls= imageService.upload(files);
         Optional<User> ops = userRepository.findById(id);
         if(!ops.isPresent()) {
             return null;
         }
-        Seller oldSeller = sellerRepository.findByUserId(id);
-        if(oldSeller != null) {
-            return oldSeller;
-        }
         User user = ops.get();
-
+        user.setPhone(phone);
+        if(profile != null) {
+            Images image = new Images();
+            image.setUrl(imageService.upload(profile));
+            imageRepository.save(image);
+            user.setImages(image);
+        }
+ 
+        userRepository.save(user);
         Seller seller = new Seller();
  
         seller.setPortfolio(portfolio);
         seller.setReviewCount(0L);
+        if(profile != null) {
+            insertImage(exampleImages, seller);
+        }
         
-        user.getUserName();
-        insertImage(files, seller);
         seller.setUser(user);
         
         return sellerRepository.save(seller);

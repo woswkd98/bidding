@@ -29,7 +29,6 @@ public class BiddingService {
 
     public String insertBidding(
         int price,
-        String context,
         long sellerId,
         long requestId,
         String state
@@ -56,7 +55,6 @@ public class BiddingService {
 
         nBidding = new Bidding();
         nBidding.setPrice(price);
-        nBidding.setContext(context);
         nBidding.setSeller(seller);
         nBidding.setRequest(request);
         nBidding.setState(state);
@@ -106,7 +104,6 @@ public class BiddingService {
             else {
                 bidding.setState("유찰");
             }
-           
             biddingRepository.save(bidding);
         }
         requestRepository.save(request);

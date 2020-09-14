@@ -57,13 +57,20 @@ public class UserController {
     private final ImageService imageService;
     private static final int cookieMaxAge = 60 * 60 * 2; //2시간
 
-    @RequestMapping(value = "/users/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/users/image/{userId}", method = RequestMethod.POST)
     public ResponseEntity<?> insertImage(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("profileImage") MultipartFile file,
             @RequestParam("userId") long userId
         ) { 
            //System.out.println(userId);
         return new ResponseEntity<>(userService.insertImage(userId, file), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/users/image/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getImage(
+            @PathVariable long userId
+        ) { 
+           System.out.println(userId);
+        return new ResponseEntity<>(userService.getImage(userId), HttpStatus.OK);
     }
     
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
@@ -80,17 +87,21 @@ public class UserController {
         RequestEntity<Map<String, Object>> req
     ) {
         Map<String, Object> map = req.getBody();
+        System.out.println(map.get("pwd").toString());
+        System.out.println(map.get("email").toString());
         
-        String rs = userService.login(
+        map = userService.login(
             map.get("email").toString(), 
-            map.get("pwd").toString());        
-            if(rs != null) {
-                Cookie cookie = new Cookie("jwt", rs);
-                cookie.setHttpOnly(true);
-                cookie.setMaxAge(cookieMaxAge);
-                res.addCookie(cookie);       
-                return new ResponseEntity<>("success", HttpStatus.OK);
-            }
+            map.get("pwd").toString());   
+        
+        if(map != null) {
+            Cookie cookie = new Cookie("jwt", map.get("token").toString());
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(cookieMaxAge);
+            res.addCookie(cookie);       
+            map.remove("token");
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        }
         
         return new ResponseEntity<>("fali", HttpStatus.OK);
     }
@@ -101,6 +112,7 @@ public class UserController {
         HttpServletResponse res,
         @CookieValue("jwt") String jwt
     ) {
+        userService.logout(jwt);
         Cookie cookie = new Cookie("jwt", null);
         cookie.setMaxAge(0);
         cookie.setHttpOnly(true);
@@ -151,10 +163,6 @@ public class UserController {
     }
 
     
-    @RequestMapping(value = "/users/image/{id}",  method = RequestMethod.GET)  
-    public String getAllUser(@PathVariable long id) {     
-        return userService.getImage(id);
-    }
 
     @RequestMapping(value = "/users/email",  method = RequestMethod.POST)  
     public List<Map<String,Object>> getUserByEmail(RequestEntity<Map<String, Object>> req) {     

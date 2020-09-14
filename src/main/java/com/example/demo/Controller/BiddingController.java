@@ -25,16 +25,15 @@ public class BiddingController {
 
     private final BiddingService biddingService;
 
-    @RequestMapping(value = "/biddings", method = RequestMethod.POST)
+    @RequestMapping(value = "/biddings", method = RequestMethod.PUT)
     public ResponseEntity<?> insertRequest(@RequestBody BiddingVO req) {
         System.out.println(req.getSellerId());
         System.out.println(req.getPrice());
         System.out.println(req.getRequestId());
-        System.out.println(req.getContext());
+
         return ResponseEntity.ok().body(
             biddingService.insertBidding(
                 req.getPrice(), 
-                req.getContext(), 
                 req.getSellerId(),
                 req.getRequestId(),
                 req.getState()

@@ -12,5 +12,5 @@ import lombok.Setter;
 public class SendingMsg {
     private String roomId;
     private String userName;
-    private String context;
+    private String message;
 }

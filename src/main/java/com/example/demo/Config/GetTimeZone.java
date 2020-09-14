@@ -46,7 +46,8 @@ public class GetTimeZone {
     } 
 
     public static Date StringToDateYMD(String date) {
-        
+        System.out.println(date);
+
         try {
             return dfOnlyDate.parse(date);
         } catch (ParseException e) {

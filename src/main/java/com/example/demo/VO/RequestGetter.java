@@ -27,4 +27,6 @@ public class RequestGetter { // 리퀘스트 저장받을 떄 형식
     private String hopeDate;
     private String state;
     private List<String> tags = new ArrayList<String>();
+
+    
 }

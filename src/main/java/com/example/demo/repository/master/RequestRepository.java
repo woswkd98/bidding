@@ -1,13 +1,17 @@
 package com.example.demo.repository.master;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.example.demo.DTO.RequestDTO;
 import com.example.demo.Model.Request;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -28,14 +32,21 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     "select r.*, u.user_name " +  
     "from request r " + 
     "inner join user u on u.user_id = r.user_id "+
+    "where r.category = :category " + 
     "limit :start, :size", nativeQuery = true)
-    public List<Map<String, Object>> getRequestsPaged(int start, int size);
+    public List<Map<String, Object>> getRequestsPaged(int start, int size, String category);
 
     @Query(value = 
     "select r.*, u.user_name " +  
-    "from request r " + 
-    "inner join user u on u.user_id = r.user_id "+
-    "where r.user_id = :userId", nativeQuery = true)
-    public  List<Map<String, Object>> getRequestById(long userId);
-    
+    "from user u  " + 
+    "inner join request r on u.user_id = r.user_id "+
+    "where r.user_id = :Id "
+    , nativeQuery = true)
+    public List<Map<String,Object>> getRequestByUserId(Long Id);
+    //public List<RequestDTO> findByUserId(@Param(value = "user_id") Long userId);
+    public List<RequestDTO> findBy(Sort sort);
+    public List<RequestDTO> findByCategory(String category, Pageable page);
+    //public List<RequestDTO> findAllByUserId(long userId, Pageable page);
+   
+
 }

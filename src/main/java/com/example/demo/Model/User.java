@@ -55,4 +55,5 @@ public class User  {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
+
 }

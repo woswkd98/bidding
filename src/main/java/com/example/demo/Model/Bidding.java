@@ -30,10 +30,7 @@ public class Bidding  {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "uploadAt", nullable = false)
     private Date uploadAt;
-    
-    @Column(name = "context", nullable = false)
-    private String context;
-    
+
     @Column(name = "price", nullable = false)
     private int price;
 

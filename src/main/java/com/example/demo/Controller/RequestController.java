@@ -23,8 +23,9 @@ public class RequestController {
     
       @RequestMapping(value = "/requests", method = RequestMethod.PUT)
       public ResponseEntity<?> insertRequest(@RequestBody RequestGetter req) {
-        
-            return ResponseEntity.ok().body(requestService.insert(req).getId());
+            System.out.println(req.toString());
+            
+            return ResponseEntity.ok().body(requestService.insert(req));
       }
       @RequestMapping(value = "/requests/{requestId}", method = RequestMethod.DELETE)
       public ResponseEntity<?> deleteRequest(@PathVariable long requestId) {
@@ -33,9 +34,13 @@ public class RequestController {
             return new ResponseEntity<>(requestService.delete(requestId), HttpStatus.OK);
       }
 
-      @RequestMapping(value = "/requests/category/{category}", method = RequestMethod.GET)
-      public ResponseEntity<?> findByCategory(@PathVariable String category) {
-            return ResponseEntity.ok().body( requestService.findByCategory(category));
+      @RequestMapping(value = "/requests/category/{category}/{start}/{size}", method = RequestMethod.GET)
+      public ResponseEntity<?> findByCategory(
+            @PathVariable String category,
+            @PathVariable int start,   
+            @PathVariable int size
+      ) {
+            return ResponseEntity.ok().body( requestService.getRequestsPaged(start, size, category));
       }
 
       @RequestMapping(value = "/requests/tag/{tag}", method = RequestMethod.GET)
@@ -44,30 +49,15 @@ public class RequestController {
       }
 
       
-      @RequestMapping(value = "/requests/id/{id}", method = RequestMethod.GET)
-      public ResponseEntity<?> findById(@PathVariable long id) {
-            return ResponseEntity.ok().body(requestService.findById(id));
+      @RequestMapping(value = "/requests/userId/{userId}", method = RequestMethod.GET)
+      public ResponseEntity<?> findById(@PathVariable long userId) {
+            return ResponseEntity.ok().body(requestService.getRequestByUserId(userId));
       }
-      /*
-      @RequestMapping(value = "/requests/{page}/{size}", method = RequestMethod.GET)
-      public ResponseEntity<?> paging(
-         @PathVariable int size,
-         @PathVariable int page
-      ) {
-         return ResponseEntity.ok().body(requestService.paging(size, page));
-      }
-      */
-      @RequestMapping(value = "/requests/{start}/{size}", method = RequestMethod.GET)
-      public ResponseEntity<?> getRequestsPaged( 
-            @PathVariable int start,
-            @PathVariable int size
-      ) {
-            return ResponseEntity.ok().body(requestService.getRequestsPaged(start, size));
-      }
+   
       
       @RequestMapping(value = "/requests/{id}", method = RequestMethod.PATCH)
       public ResponseEntity<?> requestTimeOver( 
-            @PathVariable int id
+            @PathVariable long id
       ) {
             return ResponseEntity.ok().body(requestService.requestTimeOver(id));
       }

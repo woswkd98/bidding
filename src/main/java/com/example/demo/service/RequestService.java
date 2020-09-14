@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,9 +12,10 @@ import javax.annotation.PostConstruct;
 import com.example.demo.common.*;
 import com.example.demo.Model.Request;
 import com.example.demo.VO.RequestGetter;
-import com.example.demo.columnMappingInterfaces.UserGetter;
+
 import com.example.demo.repository.master.ReqHasTagRepository;
 import com.example.demo.repository.master.RequestRepository;
+import com.example.demo.repository.master.SellerRepository;
 import com.example.demo.repository.master.TagRepository;
 import com.example.demo.repository.master.UserRepository;
 
@@ -20,12 +23,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.Config.GetTimeZone;
+import com.example.demo.DTO.RequestDTO;
+import com.example.demo.DTO.UserDTO;
 import com.example.demo.Model.*;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+
 @Component
 @RequiredArgsConstructor
 public class RequestService  {
@@ -36,18 +43,22 @@ public class RequestService  {
     private final UserRepository userRepository;
     private Sort sortByDeadLine;
 
+    
+
     @PostConstruct
     public void init() {
         sortByDeadLine = Sort.by(Sort.Direction.ASC, "deadlines");
     }
-    
+
     @Transactional
     public Request insert(RequestGetter requestGetter) {
 
+        
         Request request = new Request();
         request.setCategory(requestGetter.getCategory());
         request.setDetail(requestGetter.getDetail());
-        request.setHopeDate(GetTimeZone.StringToDateYMD(requestGetter.getHopeDate()));
+        
+        request.setHopeDate(requestGetter.getHopeDate());
         request.setUser(userRepository.findById(requestGetter.getUserId()).get());
         request.setDeadline(requestGetter.getDeadline());
         request.setUploadAt(new Date());
@@ -105,19 +116,49 @@ public class RequestService  {
     }
 
     public List<Request> getAll() {
+       
+
         return requestRepository.findAll(sortByDeadLine);
     }
 
     public Request getOne(long id) {
         return requestRepository.getOne(id);
     }
-    
-    public List<Map<String, Object>> findById(long id) {
-        return requestRepository.getRequestById(id);
+
+
+    public Map<String, Object> getRequestByUserId(long id) {
+        List<Map<String, Object>> list = requestRepository.getRequestByUserId(id);
+        Map<String, Object> newMap = new HashMap<String, Object>();
+        newMap.put("requestList", list);
+        List<List<String>> lists = new ArrayList<List<String>>();
+        for(int i =0; i <list.size(); ++i ) {
+            
+            list.get(i).forEach((k,v) -> {
+                System.out.println(k + ":"  +v.toString());
+
+            });
+
+
+            String strID = list.get(i).get("request_id").toString();
+            lists.add(tagRepository.getTagsByRequestId(Long.valueOf(strID)));
+        }
+        newMap.put("tags", lists);
+        return newMap;
     } 
 
-    public List<Map<String, Object>> getRequestsPaged(int start, int size) {
-        return requestRepository.getRequestsPaged(start, size); 
+    public  Map<String, Object> getRequestsPaged(int start, int size, String category) {
+        List<RequestDTO> list = requestRepository.findByCategory(category, PageRequest.of(start, size,Direction.ASC, "deadline"));
+        Map<String, Object> newMap = new HashMap<String, Object>();
+        newMap.put("requestList", list);
+        List<List<String>> lists = new ArrayList<List<String>>();
+        
+        for(int i =0; i <list.size(); ++i ) {
+            long strID = list.get(i).getId();
+            lists.add(tagRepository.getTagsByRequestId(strID));
+            
+        }
+        newMap.put("tags", lists);
+        return newMap; 
         
     }
 
@@ -136,7 +177,7 @@ public class RequestService  {
 
     public String requestTimeOver(long requestId) {
         Request request = requestRepository.findById(requestId).get();
-        if(request.getBidding().size() == 0) {
+        if(request.getBidding() == null) {
             request.setState("취소된 거래");
         }
         else request.setState("요청 시간 마감");

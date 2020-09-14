@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import lombok.Data;
 
 import lombok.Getter;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
-@NoArgsConstructor
+
 @Getter
 @Setter
 @Entity(name = "request")
@@ -39,14 +41,14 @@ public class Request  {
     @Column(name = "deadline", nullable = false)
     private Long deadline;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "hopeDate", nullable = false)
-    private Date hopeDate;
+
+    @Column(name = "hopeDate", nullable = true)
+    private String hopeDate;
 
     @Column(name = "state", nullable = false)
     private String state;
 
-    @ManyToOne // 다대일 단방향 매핑 
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -58,5 +60,6 @@ public class Request  {
     @OneToMany(mappedBy = "request")
     private List<ReqHasTag> request_Has_Tag = new ArrayList<>();
 
-  
+   
+
 }

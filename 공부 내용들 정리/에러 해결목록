@@ -10,3 +10,15 @@ https://okky.kr/article/328445
 
 // Hibernate5Module Bean을 써서 모듈 등록
 https://lelecoder.com/141
+
+
+
+ List<Map<String, Object>> list = requestRepository.getRequestByUserId(id);
+ list.get(i).put() // 이게 안되는데 put오버라이드 함수가 없어서 그럼 
+
+
+유저가져오기 빡셈 
+RequestDTO로 가져올 때 Request에 
+public String userEmail() {
+    return user.getUserEmail(); // 엑세스 불가 
+}

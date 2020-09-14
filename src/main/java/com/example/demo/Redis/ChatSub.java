@@ -40,7 +40,7 @@ public class ChatSub implements MessageListener {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        chatRepo.save(msg);
+     
         messagingTemplate.convertAndSend("/sub/room/" + msg.getRoomId(), msg);
         
     }

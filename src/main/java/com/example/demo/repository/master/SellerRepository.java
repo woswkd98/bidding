@@ -13,12 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface SellerRepository extends JpaRepository<Seller, Long> {
     Seller findByUserId(long userId);
 
-    @Query(value = 
-    "select s.*, u.user_name, u.user_email, u.user_phone " +  
-    "from request r " + 
-    "inner join user u on u.user_id = r.user_id "+
-    "where r.user_id = :userId", nativeQuery = true)
-    public  List<Map<String, Object>> getRequestById(long userId);
 
 
     @Query(value = 

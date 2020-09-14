@@ -24,4 +24,4 @@ mysql -u root -p // mysql 실행 비번 입력시 1234
 create database bidding; 데이터 베이스 생성 여기까지만 하면됨
 docker run --name redis -d -p 6379:6379 redis
 
-docker run -p 1234:1234 app 
+docker run -p 1234:1234 app y

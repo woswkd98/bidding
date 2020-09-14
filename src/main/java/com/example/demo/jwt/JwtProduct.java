@@ -17,40 +17,37 @@ import javax.annotation.PostConstruct;
 
 @Component
 public class JwtProduct {
-    
+
     private static byte[] sharedSecret;
 
     public static final String ISSUER = "jinheung";
-    public static final Long EXPIRATION_TIME = 30 * 60 * 1000L; //30 * 60 * 1000L; // 1초에 1000 * 60초 * 30 즉 30분
+    public static final Long EXPIRATION_TIME = 30 * 60 * 1000L; // 30 * 60 * 1000L; // 1초에 1000 * 60초 * 30 즉 30분
 
-    
-    private JWSSigner signer  = null;
+    private JWSSigner signer = null;
     private JWSVerifier verifier = null;
-    
+
     @PostConstruct
     public void init() throws JOSEException {
         sharedSecret = new byte[32];
         SecureRandom rand = new SecureRandom();
         rand.nextBytes(sharedSecret);
         try {
-            signer  = new MACSigner(sharedSecret);
+            signer = new MACSigner(sharedSecret);
             verifier = new MACVerifier(sharedSecret);
         } catch (KeyLengthException e) {
-         
+
             e.printStackTrace();
         }
 
     }
 
     public String getKey(String subject) {
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-        .subject(subject) // Claim의 주제(Subject)로 토큰이 갖는 문맥을 의미한다.
-        .issuer(ISSUER) // 토큰을 발급한 발급자(Issuer)
-        .expirationTime(new Date(new Date().getTime() + EXPIRATION_TIME)) // 만료시간
-        .build();
+        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject(subject) // Claim의 주제(Subject)로 토큰이 갖는 문맥을 의미한다.
+                .issuer(ISSUER) // 토큰을 발급한 발급자(Issuer)
+                .expirationTime(new Date(new Date().getTime() + EXPIRATION_TIME)) // 만료시간
+                .build();
 
-        SignedJWT signedJWT = new SignedJWT(
-            new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+        SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
         try {
             signedJWT.sign(this.signer);
         } catch (JOSEException e) {
@@ -62,33 +59,55 @@ public class JwtProduct {
     public boolean verify(String subject, String serialized) throws ParseException, JOSEException {
         SignedJWT signedJWT = null;
         signedJWT = SignedJWT.parse(serialized);
-        if(signedJWT == null) {
+        if (signedJWT == null) {
             return false;
         }
 
-        if(!signedJWT.verify(verifier)) {
+        if (!signedJWT.verify(verifier)) {
             return false;
         }
-        
-        if(!subject.equals(signedJWT.getJWTClaimsSet().getSubject())) {
+
+        if (!subject.equals(signedJWT.getJWTClaimsSet().getSubject())) {
             System.out.println("subject");
             System.out.println(signedJWT.getJWTClaimsSet().getSubject());
             return false;
         }
 
-        if(!new Date().before(signedJWT.getJWTClaimsSet().getExpirationTime())) {
+        if (!new Date().before(signedJWT.getJWTClaimsSet().getExpirationTime())) {
             System.out.println("Date");
             System.out.println(signedJWT.getJWTClaimsSet().getExpirationTime());
             return false;
         }
-        if(!ISSUER.equals(signedJWT.getJWTClaimsSet().getIssuer())) {
+        if (!ISSUER.equals(signedJWT.getJWTClaimsSet().getIssuer())) {
             System.out.println("getIssuer");
             System.out.println(signedJWT.getJWTClaimsSet().getIssuer());
             return false;
         }
         System.out.println("success");
         return true;
-        
+
+    }
+
+    public String getSubject(String token) {
+        SignedJWT signedJWT = null;
+        try {
+            signedJWT = SignedJWT.parse(token);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (signedJWT == null) {
+            return null;
+        }
+
+        String subject = null;
+        try {
+            subject = signedJWT.getJWTClaimsSet().getSubject();
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

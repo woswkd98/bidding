@@ -60,33 +60,6 @@ public class ImageService {
                 .withRegion(this.region).build();
     }
 
-    public List<String> upload(MultipartFile files[]) {
-        List<String> urlList = new ArrayList<>();
-        for(int i =0; i < files.length; ++i) {
-            System.out.println(files[i].getOriginalFilename());
-
-        }
-        
-        /*
-        for(int i =0; i < files.length; ++i) {
-        
-            try {
-                ObjectMetadata omd = new ObjectMetadata();
-                omd.setContentType(files[i].getContentType());
-                omd.setContentLength(files[i].getSize());
-                omd.setHeader("filename", files[i].getOriginalFilename());
-        
-                String strID = files[i].getOriginalFilename();
-                s3Client.putObject(new PutObjectRequest(bucket, strID, files[i].getInputStream(), omd));
-                s3Client.setObjectAcl(bucket,strID,CannedAccessControlList.PublicRead);
-                urlList.add(s3Client.getUrl(bucket, strID).toString());
-            } catch (IOException e) {
-                //TODO: handle exception
-            } 
-        } */
-        return urlList;
-    }
-
     public String upload(MultipartFile files) {
         File convFile = null;
         String strID = null;

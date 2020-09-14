@@ -29,7 +29,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BiddingVO {
-    private String context;
     private int price;
     private long requestId;
     private long sellerId;

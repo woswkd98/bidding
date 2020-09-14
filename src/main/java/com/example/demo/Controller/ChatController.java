@@ -57,7 +57,7 @@ public class ChatController {
         
         newMsg.setUploadAt(GetTimeZone.StringToDate(GetTimeZone.getSeoulDate()));
         newMsg.setUserName(msg.getUserName());
-        newMsg.setMessage(msg.getContext());
+        newMsg.setMessage(msg.getMessage());
         newMsg.setRoomId(msg.getRoomId());
         
         ChannelTopic topic = chatService.getTopic(newMsg.getRoomId());
@@ -83,15 +83,15 @@ public class ChatController {
         return chatService.getRooms();
     }
 
-    @RequestMapping(value = "/rooms", method = RequestMethod.DELETE)
-    public String deleteRoom(@PathVariable String roomId) {
-        ChannelTopic channel = chatService.getTopic(roomId);
+    @RequestMapping(value = "/rooms/{requestId}/{sellerId}", method = RequestMethod.DELETE)
+    public String deleteRoom(@PathVariable long requestId, @PathVariable long sellerId) {
+        ChannelTopic channel = chatService.getTopic(requestId + "/" + sellerId);
         redisMessageListener.removeMessageListener(chatSub, channel);
         return "deleteRoom";
     }
 
-    @RequestMapping(value = "/chats/{roomId}", method = RequestMethod.GET) 
-    public List<ChatMsg> getChatMsgs(@RequestParam String roomId) {
-        return chatService.getChattingList(roomId);
+    @RequestMapping(value = "/chats/{requestId}/{sellerId}", method = RequestMethod.GET) 
+    public List<ChatMsg> getChatMsgs(@PathVariable long requestId, @PathVariable long sellerId) {
+        return chatService.getChattingList(requestId + "/" + sellerId);
     } 
 }

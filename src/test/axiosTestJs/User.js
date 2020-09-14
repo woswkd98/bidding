@@ -7,7 +7,6 @@ export default function User() {
             userPassword : "435734!!57t",
             userEmail : "12ggy@naver.com",
             userName : "fgh",
-            phone : "010632646234",
         }).then(res => {
             console.log(res);
         })

@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import com.example.demo.Config.EmailSender;
 import com.example.demo.Model.Images;
+import com.example.demo.Model.Seller;
 import com.example.demo.Model.User;
 import com.example.demo.VO.UserVO;
 import com.example.demo.common.JpaCrudServiceBase;
@@ -44,8 +45,17 @@ public class UserService  {
     private final UserRepository repository;
     private final ImageRepository imageRepository;
     private final ImageService imageService;
+    private final SellerRepository sellerRepository;
     private  HashOperations<String, String, String> hashOps;
 
+    @PostConstruct
+    public void init() {
+        hashOps = redisTemplate.opsForHash();
+    }
+
+    public static String getUserHashKey() {
+        return userHashKey;
+    }
 
     public User insertImage(long userId, MultipartFile file) {
         User user = repository.findById(userId).get();
@@ -63,8 +73,13 @@ public class UserService  {
     } 
 
     public String getImage(long userId) {
-        User user = repository.getOne(userId);
+        Optional<User> oUser = repository.findById(userId);
+        if(!oUser.isPresent()) {
+            return "아이디가 없다";
+        }
+        User user =oUser.get();
         if(user.getImages() != null) {
+            System.out.println(user.getImages().getUrl());
             return user.getImages().getUrl();
         }
         return "이미지 없음";
@@ -86,15 +101,12 @@ public class UserService  {
         if(!pattern.isValidEmail(vo.getUserEmail())) {
             return "이메일 형식이 아니다";
         }
-        
-        if(!pattern.phoneForm(vo.getPhone())) {
-            return "휴대폰 형식";
-        }
-
-        User user = new User();
+        User user = repository.findByUserEmail(vo.getUserEmail());
+        if(user != null) return "이메일 중복";
+        user = new User();
     
-        user.setPhone(vo.getPhone());
-        user.setState("1`234");
+
+        user.setState("USER");
         user.setUserEmail(vo.getUserEmail());
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -119,6 +131,15 @@ public class UserService  {
     
     public List<User> findAll() {
         return repository.findAll();
+    }
+
+    public boolean logout(String token) {
+        String subject = jwtProduct.getSubject(token);
+        if(subject == null) {
+            return false;
+        }
+        hashOps.delete(userHashKey, subject);
+        return true;
     }
 
     public User updateUserInfo(long id, String phone, String profileImage, String state) {
@@ -149,16 +170,48 @@ public class UserService  {
         return "실패";
     }
 
-    public String login(String userEmail, String userPassword) {
+    public Map<String,Object> login(String userEmail, String userPassword) {
          
         User user = repository.findByUserEmail(userEmail);
-        
+       // System.out.println(user.getId() + "  " + "aaaaaaaaaaaaaaaaaa");
+       
+
+        if(user == null) {
+
+            System.out.println("err2or");
+            return null;
+        }
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        System.out.println(user.getUserPassword());
         if(passwordEncoder.matches(userPassword, user.getUserPassword())) {
             String token = jwtProduct.getKey(user.getUserEmail());
-            
-            return token;
+            System.out.println(125);
+            System.out.println(token);
+            hashOps.put(userHashKey, user.getUserEmail(), user.getState());
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("token", token);
+            map.put("_id", user.getId());
+            map.put("name",user.getUserName());
+            if(user.getImages() != null)
+                map.put("profileImage",user.getImages().getUrl());
+            else map.put("profileImage", "");
+            Seller seller = sellerRepository.findByUserId(user.getId());
+            System.out.println(user.getId());
+          
+            if(seller != null) {
+                
+                map.put("is_seller", seller.getId());
+
+            }            
+            else {
+                 map.put("is_seller", 0);
+            }        
+            return map;
+        }else {
+            System.out.println("123125");
+         
         }
+
         return null;
     }
 
