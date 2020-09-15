@@ -51,7 +51,7 @@ const Progress = ({ data, requestData }) => {
 
     const tradeCancel = () => {
         Axios.post('/biddings/tradeCancel',{
-            requestId: requestData._id,
+            requestId: requestData.request_id,
         })
         .then(res=>{
             alert(res.data);

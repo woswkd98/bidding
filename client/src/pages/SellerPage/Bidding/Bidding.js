@@ -34,8 +34,10 @@ const Bidding = ({ open, setOpen, data }) => {
 
     const sendBid = () => {
         console.log(data);
+        console.log(localStorage.getItem("is_seller"));
+        console.log(data.request_id);
         Axios.put('/biddings', {
-            requestId: data.id,
+            requestId: data.request_id,
             sellerId: localStorage.getItem("is_seller"),
             price: price,
             state : " 거래 진행중",

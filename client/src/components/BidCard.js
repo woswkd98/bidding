@@ -52,8 +52,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BidCard = ({ data, requestData, onClickChoice }) => {
-    console.log("biddcard");
-    console.log(data);
+
+    
+    
     const classes = useStyles();
 
     const [open, setOpen] = useState(false);
@@ -92,7 +93,7 @@ const BidCard = ({ data, requestData, onClickChoice }) => {
                         </Button>
                     </Grid>
                 </Grid>
-                <ProfileModal open={open} onClose={handleClose} user_id={user_id} />
+                <ProfileModal open={open} onClose={handleClose} user_id={user_id} /> 
             </CardContent>
         </Card>
     )

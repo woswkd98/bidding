@@ -42,6 +42,7 @@ const ReceiveList = ({ requestData, bidData, onClickChoice, }) => {
     const classes = useStyles();
     console.log(bidData);
     const tradeCancel = () => {
+        console.log("Trand");
         Axios.post('/biddings/tradeCancel',{
             requestId: requestData.request_id,
         })

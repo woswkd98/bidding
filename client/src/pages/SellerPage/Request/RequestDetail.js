@@ -37,7 +37,8 @@ function RequestDetail(props) {
             setChecked(false);
         }
     },[])
-
+    console.log(" console.log(data);125125");
+    console.log(data);
     return (
         <Fade in={checked}>
             <Container className={classes.root}>

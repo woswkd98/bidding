@@ -75,6 +75,7 @@ const MyPage = () => {
                     <Button className={classes.buttonStyle} variant="outlined" component={Link} to='/user/mypage'>
                         구매 정보
                     </Button>
+                    
                     <Button className={classes.buttonStyle} variant="outlined" onClick={handleClickOpen}>
                         나의 프로필
                     </Button>

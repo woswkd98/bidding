@@ -53,14 +53,20 @@ public class SellerController {
     private final SellerService sellerService;
     private final ReviewService reviewService;
     @RequestMapping(value = "/sellers", method = RequestMethod.POST) 
-    public String insertSeller(
+    public Map<String, Object> insertSeller(
         @RequestParam(name = "profileImage", required =false) MultipartFile files1, 
-        @RequestParam("phone") String phone,
+        @RequestParam(name = "phone",required =false) String phone,
         @RequestParam(name = "exampleImages",required =false) MultipartFile files2[], 
-        @RequestParam("userId") long userId, 
-        @RequestParam("portfolio") String portfolio)  
+        @RequestParam( "userId") long userId, 
+        @RequestParam(name ="portfolio",required =false) String portfolio,
+        @RequestParam(name ="deleteImages",required =false) Long[] deleteImages
+        )  
     {
-        return  sellerService.insertSeller(userId,portfolio,files1, files2,phone).getId().toString();
+        Map<String, Object> newMap = new HashMap<>();
+        Seller seller =sellerService.insertSeller(userId,portfolio,files1, files2,phone,deleteImages);
+        if(seller.getUser().getImages() != null)
+            newMap.put("profileImage", seller.getUser().getImages().getUrl());
+        return  newMap;
     }
 
     @RequestMapping(value = "/sellers", method = RequestMethod.GET) 

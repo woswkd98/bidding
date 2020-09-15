@@ -55,8 +55,9 @@ const RequestDetail = (props) => {
 
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    console.log(requestData);
+
     const getBidsInRequest = useCallback(() => {
+        console.log("get");
         Axios.get('/biddings/request/' + requestData.request_id)
             .then(res => {
                 setData(res.data);

@@ -31,10 +31,10 @@ const Watting = ({ data }) => {
     const history = useHistory();
 
     const user_id = useSelector(state => state.userAction.user_id)
-
+    console.log(data);
     const bidCancel = () => {
         Axios.post('/biddings/biddingCancel',{
-            biddingId : data._id,
+            biddingId : data.request_id,
         })
         .then(res => {
             alert(res.data);
@@ -61,14 +61,14 @@ const Watting = ({ data }) => {
         <Container className={classes.root}>
             <Grid className={classes.gridStyle} container spacing={7}>
                 <Grid item xs={12} md={6}>
-                    <RequestCard obj={data.request} />
+                    <RequestCard obj={data} />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Typography align="center" variant="h5" gutterBottom>
                         낙찰 대기중입니다.
                     </Typography>
                     <Typography align="center" variant="h6" gutterBottom>
-                        <Counter data={data.request}/>
+                        <Counter data={data}/>
                     </Typography>
                     <br/>
                     <Typography align="center" variant="h6" paragraph>
@@ -83,7 +83,7 @@ const Watting = ({ data }) => {
                     </Button>
                 </Grid>
             </Grid>
-            <Chat open={chatOpen} onClose={handleChatClose} request={data.request._id} seller={user_id} />
+            <Chat open={chatOpen} onClose={handleChatClose} request={data.request_id} seller={user_id} />
         </Container>
     )
 }

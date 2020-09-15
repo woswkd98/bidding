@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,43 +37,84 @@ public class SellerService {
 
  
     @Transactional
-    public Seller insertSeller(long id, String portfolio,MultipartFile profile,  MultipartFile exampleImages[],String phone ) {
+    public Seller insertSeller(long id, String portfolio,MultipartFile profile,  MultipartFile exampleImages[],String phone, Long[] deleteImages) {
         //List<String> urls= imageService.upload(files);
         Optional<User> ops = userRepository.findById(id);
         if(!ops.isPresent()) {
             return null;
         }
+        
+
         User user = ops.get();
-        user.setPhone(phone);
+        if(phone != null)
+            user.setPhone(phone);
+     
+           
         if(profile != null) {
-            Images image = new Images();
-            image.setUrl(imageService.upload(profile));
+            Images image = null;
+            if(user.getImages() == null){
+                image = new Images();
+                image.setUrl(imageService.upload(profile));
+            }
+            else {
+                image = user.getImages();
+                imageService.deleteImage(image.getUrl());
+                user.getImages().setUrl(imageService.upload(profile));
+            }
+            
             imageRepository.save(image);
             user.setImages(image);
         }
  
         userRepository.save(user);
-        Seller seller = new Seller();
- 
-        seller.setPortfolio(portfolio);
-        seller.setReviewCount(0L);
-        if(profile != null) {
-            insertImage(exampleImages, seller);
+        Seller seller = sellerRepository.findByUserId(user.getId());
+        if(seller == null) {
+            seller = new Seller();
         }
+
+        if(portfolio != null)
+            seller.setPortfolio(portfolio);
         
+        
+        System.out.println("existprofile");
+        insertImage(exampleImages, seller, deleteImages);
+        
+        
+        
+
         seller.setUser(user);
         
         return sellerRepository.save(seller);
         
     } 
     @Transactional
-    private List<String> insertImage(MultipartFile files[], Seller seller) {
+    private List<String> insertImage(MultipartFile files[], Seller seller, Long[] deleteImages) {
            
         List<String> urls = new ArrayList<>();
+        
+        List<Images> list = imageRepository.findAllById(Arrays.asList(deleteImages));
 
+        if(deleteImages != null) {
+            Images image = null;
+            List<SellerHasImg> shi = null;
+            for(int i = 0; i < list.size(); ++i) {
+                image = list.get(i);
+                imageService.deleteImage(image.getUrl());
+                shi =  image.getSellerHasImgs();
+                sellerHasImgRepo.deleteAll(shi); 
+            }
+
+            imageRepository.deleteAll(list);
+        
+        } 
+        
+        
+        if(files == null) return null;
         for(int i = 0; i < files.length; ++i) {
             Images image = new Images();
+            
             image.setUrl(imageService.upload(files[i]));
+            System.out.println(image.getUrl());
             imageRepository.save(image);
             SellerHasImg sellerHasImg = new SellerHasImg();
             sellerHasImg.setImages(image);
@@ -81,7 +124,7 @@ public class SellerService {
            
             urls.add(image.getUrl());
         }
-
+        
         return urls;
 
     }

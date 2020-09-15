@@ -48,14 +48,20 @@ const MyPage = () => {
     };
 
     const getMyProfileImage = useCallback(() => {
-        /*Axios.get('/users/image/' + localStorage.getItem("user_id"))
+        Axios.get('/users/image/' + localStorage.getItem("user_id"))
         .then(res => {
             console.log(res.data);
             setData(res.data);
         })
         .catch(err=>{
             console.log(err);
-        })*/
+
+        })/*
+        
+          <Button className={classes.buttonStyle} variant="outlined" onClick={handleClickOpen}>
+                        나의 프로필
+                    </Button>
+        */
     },[user_id])
 
     useEffect(()=>{
@@ -78,15 +84,14 @@ const MyPage = () => {
                     <Button className={classes.buttonStyle} variant="outlined" component={Link} to='/user/mypage'>
                         구매 정보
                     </Button>
-                    <Button className={classes.buttonStyle} variant="outlined" onClick={handleClickOpen}>
-                        나의 프로필
-                    </Button>
+
+                  
                     <br />
                 </Grid>
                 <Grid item xs={12} md={9}>
                     <MyRequest />
                 </Grid>
-                <ProfileModal name={userName} open={open} onClose={handleClose} user_id={user_id} />
+                { localStorage.getItem("is_seller") > 0 ? <ProfileModal name={userName} open={open} onClose={handleClose} user_id={user_id} />: null}
             </Grid>
         </Container>
     )

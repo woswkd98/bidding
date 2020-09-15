@@ -72,7 +72,7 @@ function Request({ data, checked, tags, setTags }) {
                 <Card className={classes.card}>
                     <CardContent className={classes.cardContent}>
                         <Link className={classes.titleStyle} to={{ pathname: `/seller/request/${data._id}`, state: { data: data } }}>
-                            <small>{data.requestedAt}</small><br />
+                            <small>{data.upload_at}</small><br />
                             <Typography variant="h5" gutterBottom>
                                 {data.user_name} 님의 {data.category} 요청
                                     </Typography>

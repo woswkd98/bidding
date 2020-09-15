@@ -87,6 +87,8 @@ const ProfileEdit = ({ profile, onClose, open, user_id, profileClose }) => {
 
     const [phone, setPhone] = useState(profile.phone)
 
+    const [deleteExpreview, setDeleteExpreview] = useState([])
+
     const [phoneInput, setPhoneInput] = useState({
         phone1: '',
         phone2: '',
@@ -109,9 +111,11 @@ const ProfileEdit = ({ profile, onClose, open, user_id, profileClose }) => {
         const config = { //config 객체
             header: { "content-type": "multipart/form-data" },
         };
-        formData.append('user', user_id);
+        formData.append('userId', user_id);
         formData.append('phone', phone);
-        formData.append('text', text);
+        formData.append('context', text);
+        if(deleteExpreview)
+            formData.append("deleteImages", deleteExpreview);
         if (profileImage) {
             formData.append("profileImage", profileImage);
         } else {
@@ -130,7 +134,11 @@ const ProfileEdit = ({ profile, onClose, open, user_id, profileClose }) => {
         }
         Axios.post('/sellers', formData, config)
             .then(res => {
-                console.log(res);
+                console.log("post");
+                console.log(res.data);
+             
+                localStorage.setItem("profileImage", res.data.profileImage)
+            
                 setLoading(false);
                 onClose();
                 profileClose();
@@ -183,6 +191,7 @@ const ProfileEdit = ({ profile, onClose, open, user_id, profileClose }) => {
             });
             imageRead(files[i]);
         }
+        console.log("onChangeImage");
         console.log(exampleImages);
     }
 
@@ -196,13 +205,26 @@ const ProfileEdit = ({ profile, onClose, open, user_id, profileClose }) => {
     }
 
     const onClicDeleteExPreview = (ex) => {
+        setDeleteExpreview((deleteExpreview) => {
+            return [...deleteExpreview, ex.id
+        ]});
+        console.log("confrim")
+        console.log(ex);
         setExPreview(exPreview.filter((x) => {
-            return ex !== x;
+            console.log("1234");
+            console.log(x);
+            console.log("1234");
+            console.log( ex.id);
+            return ex.id !== x.id;
         }))
-        console.log(exPreview);
+        
+       
+        console.log(deleteExpreview);
     }
 
     const showExamplePreview = examplePreview.map((obj, index) => {
+        console.log("showExamplePreview");
+       
         return (
             <GridListTile key={index} >
                 <img src={obj.src} alt="없음" onClick={() => { onClickImageOpen(obj.src) }} />
@@ -219,11 +241,13 @@ const ProfileEdit = ({ profile, onClose, open, user_id, profileClose }) => {
             </GridListTile>
         )
     })
-
+   
     const showExPreview = exPreview.map((obj, index) => {
+        console.log("showExPreview");
+        console.log(obj);
         return (
             <GridListTile key={index} >
-                <img src={obj} alt="없음" onClick={() => { onClickImageOpen(obj) }} />
+                <img src={obj.url} alt="없음" onClick={() => { onClickImageOpen(obj.url) }} />
                 <GridListTileBar
                     titlePosition="bottom"
                     actionIcon={

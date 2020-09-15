@@ -21,14 +21,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Failed = ({ data }) => {
-
+    console.log("Failed");
+    console.log(data);
     const classes = useStyles();
 
     return (
         <Container className={classes.root}>
             <Grid className={classes.gridStyle} container spacing={7}>
                 <Grid item xs={12} md={6}>
-                    <RequestCard obj={data.request} />
+                    <RequestCard obj={data} />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <br />

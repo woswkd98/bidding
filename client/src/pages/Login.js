@@ -78,6 +78,7 @@ const Login = ({handleJoin}) => {
       if (res.data._id) {
         dispatch({ type: 'LOGIN', payload: { user_id: res.data._id, is_seller: res.data.is_seller, userName: res.data.name } });
         localStorage.setItem('is_login', true);
+        console.log("asdgasdg              " +  res.data.is_seller);
         localStorage.setItem('is_seller', res.data.is_seller);
         localStorage.setItem('user_id', res.data._id);
         localStorage.setItem('userName', res.data.name);

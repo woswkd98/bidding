@@ -31,11 +31,12 @@ const useStyles = makeStyles((theme) => ({
 const Progress = ({ data }) => {
 
     const user_id = useSelector(state => state.userAction.user_id)
-
+    console.log("pro");
+    console.log(data.request_id);
     const classes = useStyles();
 
     const history = useHistory();
-
+    console.log(data);
     const [chatOpen, setChatOpen] = useState(false);
 
     const handleChatOpen = () => {
@@ -47,8 +48,10 @@ const Progress = ({ data }) => {
     }
 
     const tradeCancel = () => {
+        console.log("tradeCancel");
+        console.log(data.request_id);
         Axios.post('/biddings/tradeCancel',{
-            requestId: data.request._id
+            requestId: data.request_id
         })
         .then(res => {
             alert(res.data)
@@ -65,7 +68,7 @@ const Progress = ({ data }) => {
         <Container className={classes.root}>
             <Grid className={classes.gridStyle} container spacing={9}>
                 <Grid item xs={12} md={6}>
-                    <RequestCard obj={data.request} />
+                    <RequestCard obj={data} />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <List>
@@ -89,7 +92,7 @@ const Progress = ({ data }) => {
                 </Grid>
             </Grid>
             <Notice />
-            <Chat open={chatOpen} onClose={handleChatClose} request={data.request._id} seller={user_id} />
+            <Chat open={chatOpen} onClose={handleChatClose} request={data.request_id} seller={user_id} />
         </Container>
     )
 }

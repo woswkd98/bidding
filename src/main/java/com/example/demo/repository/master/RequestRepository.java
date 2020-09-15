@@ -38,11 +38,26 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     @Query(value = 
     "select r.*, u.user_name " +  
+    "from request r " + 
+    "inner join user u on u.user_id = r.user_id "+
+    "limit :start, :size", nativeQuery = true)
+    public List<Map<String, Object>> getAllPaged(int start, int size);
+
+    @Query(value = 
+    "select r.*, u.user_name " +  
     "from user u  " + 
     "inner join request r on u.user_id = r.user_id "+
     "where r.user_id = :Id "
     , nativeQuery = true)
     public List<Map<String,Object>> getRequestByUserId(Long Id);
+
+    @Query(value = 
+    "select r.*, u.user_name " +  
+    "from user u  " + 
+    "inner join request r on u.user_id = r.user_id "+
+    "where r.request_id = :Id "
+    , nativeQuery = true)
+    public Map<String,Object> getRequestByRequestId(Long Id);
     //public List<RequestDTO> findByUserId(@Param(value = "user_id") Long userId);
     public List<RequestDTO> findBy(Sort sort);
     public List<RequestDTO> findByCategory(String category, Pageable page);

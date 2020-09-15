@@ -159,9 +159,11 @@ const ExpertRegister = ({ onClose, open, user_id }) => {
         Axios.post('/sellers', formData, config)
             .then(res => {
                 console.log(res.data);
-                localStorage.setItem("is_seller", res.data);
+                console.log("sellers");
+                if(localStorage.getItem("is_seller") === 0)
+                    localStorage.setItem("is_seller", res.data);
                 setLoading(false);
-                
+                window.location.reload();
                 onClose();
             })
             .catch(err => {

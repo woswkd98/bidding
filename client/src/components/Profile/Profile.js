@@ -67,6 +67,7 @@ const Profile = ({ profile, onClose, open, user_id }) => {
 
 
     const reviewList = profile.reviews.map((obj, index) => {
+
         return (
             <ListItem key={index}>
                 <ListItemAvatar>
@@ -82,13 +83,18 @@ const Profile = ({ profile, onClose, open, user_id }) => {
             </ListItem>
         )
     })
+
     
+
     return (
         <Dialog fullWidth={true} maxWidth="sm" onClose={handleClose} aria-labelledby="form-dialog-title" open={open}>
             <DialogTitle id="simple-dialog-title">
                 <Grid container>
                     <Grid item xs={1}>
-                        <Avatar className={classes.avatar} src={profile.exampleImages[0].url} />
+                    {
+                            profile.profileImage !== null ? <Avatar className={classes.avatar} src={profile.profileImage} /> :null
+                        }
+                        
                     </Grid>
                     <Grid item xs={11}>
                         <Typography variant="h6" color="textPrimary" style={{ display: "inline-block", marginTop: "5px", marginLeft: "5px" }}>
@@ -99,7 +105,10 @@ const Profile = ({ profile, onClose, open, user_id }) => {
             </DialogTitle>
             <DialogContent>
                 <div className={classes.root}>
-                    {profile.exampleImages.length !== 0
+
+                    {
+                    
+                    profile.exampleImages.length !== 0
                         ?
                         profile.exampleImages.length === 1
                             ?
@@ -119,7 +128,11 @@ const Profile = ({ profile, onClose, open, user_id }) => {
                         <textPrimary style={{ textAlign: 'center', marginTop: '60px' }}>No Image</textPrimary>
                     }
                 </div>
+               
+                
                 <br />
+                
+                
                 <Typography variant="h6" color="textPrimary" gutterBottom>소개 및 설명</Typography>
                 {profile.portfolio !== ''
                     ?
@@ -138,7 +151,9 @@ const Profile = ({ profile, onClose, open, user_id }) => {
                         value="등록된 설명이 없습니다."
                         style={{ width: "100%" }}
                     />
+                
                 }
+
                 <br /><br />
                 <Typography variant="h6" color="textPrimary" gutterBottom style={{ display: 'inline-block' }}>이용자 리뷰</Typography>
                 {reviewList.length !== 0

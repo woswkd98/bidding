@@ -21,13 +21,16 @@ const useStyle = makeStyles((theme) => ({
 
 const RequestCard = ({ obj,onClickChecked }) => {
 
-    const classes = useStyle();
 
+    const classes = useStyle();
+    
+    console.log("onsole.log(obj);");
+    console.log(obj);
     return (
         <Card onClick={onClickChecked} className={classes.rootStyle} elevation={3}>
             {obj.user_name !== null
                 &&
-                <CardHeader style={{ textAlign: 'center' }} title={`${obj.user_name}님의 요청서`} subheader={new Date(obj.uploadAt).toLocaleString()} />
+                <CardHeader style={{ textAlign: 'center' }} title={`${obj.user_name}님의 요청서`} subheader={new Date(obj.upload_at).toLocaleString()} />
             }
             <Divider/>
             <CardContent>

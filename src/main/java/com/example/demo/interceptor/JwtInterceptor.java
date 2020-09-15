@@ -37,7 +37,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        
+        System.out.println("여기에 들어오니?");
         Cookie cookie[] = request.getCookies(); 
         for(int i =0; i < cookie.length; ++i) {   
             if("jwt".equals(cookie[i].getName())){// 쿠키안에 jwt 들어가 있는게 
@@ -49,6 +49,8 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
                 return value;
             }
         }
+
+        
 
         return false;
     }

@@ -20,8 +20,11 @@ const ProfileModal = ({ onClose, open, user_id }) => {
     const [loading, setLoading] = useState(true);
 
     const getMyProfile = useCallback(() => {
-        Axios.get('/sellers/' + localStorage.getItem("is_seller"))
+        const sellerId = localStorage.getItem("is_seller")
+        console.log(sellerId);
+        Axios.get('/sellers/' + sellerId)
             .then(res => {
+                console.log("profileModal");
                 console.log(res.data);
                 setData(res.data);
                 setLoading(false);

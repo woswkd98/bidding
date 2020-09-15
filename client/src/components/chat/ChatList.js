@@ -41,17 +41,20 @@ const useStyles = makeStyles(() => ({
 
 function ChatList({ data, userName, avatarSrc }) {
 
-    const classes = useStyles();
     console.log(data);
+    const classes = useStyles();
+    
     return (
         <>
-            {(data.user_name === 'system') ?
+            {(userName === 'system') ?
+    
                 <>
                     <div className={classes.systemStyle}>
                         {data.message}
                     </div>
                 </> :
-                (data.user_name === userName) ?
+          
+                (userName=== localStorage.getItem("userName")) ?
                     <>
                         <ListItem alignItems="center" style={{ textAlign: 'right'}}>
                             <ListItemText
@@ -73,14 +76,14 @@ function ChatList({ data, userName, avatarSrc }) {
                                 <Avatar alt="Remy Sharp" src={avatarSrc} />
                             </ListItemAvatar>
                             <ListItemText
-                                primary={<small>{data.name}</small>}
+                                primary={<small>{userName}</small>}
                                 secondary={
                                     <React.Fragment>
                                         <span className={classes.otherTextStyle}>
                                             {data.message}
                                         </span>
                             &nbsp;&nbsp;
-                            <small>{data.createdAt}</small>
+                            <small>{data.upload_At}</small>
                                     </React.Fragment>
                                 }
                             />

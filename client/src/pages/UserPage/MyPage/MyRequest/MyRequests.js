@@ -54,7 +54,7 @@ const MyRequests = ({ data }) => {
             <Grid className={classes.gridStyle} key={obj._id} item xs={12} sm={6} md={4}>
                 <Link className={classes.linkStyle} to={{ pathname: `/user/detail`, state: obj }}>
                     <Card className={classes.cardStyle} size="large" color="primary">
-                        <CardHeader className={classes.cardHeaderStyle} title={obj.category} subheader={obj.requestedAt} />
+                        <CardHeader className={classes.cardHeaderStyle} title={obj.category} subheader={new Date(obj.upload_at).toLocaleString()} />
                         <CardContent>
                             <div className={classes.tagDivStyle}>
                                 {showTagList}

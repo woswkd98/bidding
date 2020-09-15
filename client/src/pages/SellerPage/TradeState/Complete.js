@@ -23,13 +23,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Complete = ({ data }) => {
-
+    console.log(data);
     const classes = useStyles();
     return (
         <Container className={classes.root}>
             <Grid className={classes.gridStyle} container spacing={9}>
                 <Grid item xs={12} md={6}>
-                    <RequestCard obj={data.request} />
+                    <RequestCard obj={data} />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <CheckCircleIcon className={classes.icon} />

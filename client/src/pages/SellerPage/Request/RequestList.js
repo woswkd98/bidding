@@ -32,9 +32,32 @@ const RequestList = ({ category }) => {
     const [data, setData] = useState([]);
     console.log(category);
     const [loading, setLoading] = useState(true);
-    const size = 6;
+    const size = 5;
     const getAllRequests = useCallback(() => {
-        Axios.get('/requests/category/' + category + "/" + (page - 1) + "/" + size)
+        if(category === "모든 요청") {
+            console.log(1231254);
+            console.log(1231254);
+            Axios.get('/requests/'  + ((page - 1) * size) + "/"+ 10).then(res => {
+                let requests = res.data.requestList;
+                const tags = res.data.tags;
+                let count =0;
+                requests = requests.filter(element => {
+                    console.log("111111111111111111111");
+                    console.log(element.state);
+                    element.tags = tags[count++];
+                    console.log(element);
+             
+                    return 1;
+                });
+
+                console.log(res.data);
+                setData(requests);
+                setLoading(false);
+            })
+
+        }
+        else {
+        Axios.get('/requests/category/' + category + "/" + ((page - 1) * size)  + "/"+ size)
             .then(res => {
                 let requests = res.data.requestList;
                 const tags = res.data.tags;
@@ -44,17 +67,7 @@ const RequestList = ({ category }) => {
                     console.log(element.state);
                     element.tags = tags[count++];
                     console.log(element);
-                    if("요청 시간 마감" === element.state) {
-                        return 0;
-                    }
-                    if("취소된 거래" === element.state) {
-                        return 0;
-                    }
-
-                    if("거래 완료" === element.state) {
-                        return 0;
-                    }
-
+       
                     return 1;
                 });
 
@@ -65,6 +78,7 @@ const RequestList = ({ category }) => {
             .catch(err => {
                 console.log(err);
             })
+        }
     },[category,page])
 
     useEffect(() => {

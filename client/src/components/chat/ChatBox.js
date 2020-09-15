@@ -73,10 +73,13 @@ function ChatBox({ userInfo, avatarSrc }) {
     }
 
     useEffect(() => {
-        console.log(userInfo);
+
         objDiv.current.scrollTop = objDiv.current.scrollHeight;
+        console.log(userInfo);
         Axios.get("/chats/" + userInfo.room).then(res => {
+            console.log(res.data);
             setData(res.data);
+            
         })
 
     }, [newMessages])
@@ -84,11 +87,11 @@ function ChatBox({ userInfo, avatarSrc }) {
 
     
     const lastMessageList =data.map((data, i) => {
-        return <ChatList key={i} data={data} userName={userName} avatarSrc={avatarSrc} />
+        return <ChatList key={i} data={data} userName={data.userName} avatarSrc={avatarSrc} />
     })
 
     const newMessageList = newMessages.map((data, i) => {
-        return <ChatList key={i} data={data} userName={userName} avatarSrc={avatarSrc} />
+        return <ChatList key={i} data={data} userName={data.userName} avatarSrc={avatarSrc} />
     })
 
     const onChangeMessage = (e) => {

@@ -132,13 +132,6 @@ public class RequestService  {
         newMap.put("requestList", list);
         List<List<String>> lists = new ArrayList<List<String>>();
         for(int i =0; i <list.size(); ++i ) {
-            
-            list.get(i).forEach((k,v) -> {
-                System.out.println(k + ":"  +v.toString());
-
-            });
-
-
             String strID = list.get(i).get("request_id").toString();
             lists.add(tagRepository.getTagsByRequestId(Long.valueOf(strID)));
         }
@@ -146,15 +139,43 @@ public class RequestService  {
         return newMap;
     } 
 
+    public Map<String, Object> getRequestById(long id) {
+        Map<String, Object>list = requestRepository.getRequestByRequestId(id);
+        Map<String, Object> newMap = new HashMap<String, Object>();
+        newMap.put("requestList", list);
+        String strID = list.get("request_id").toString();
+       
+        newMap.put("tags",tagRepository.getTagsByRequestId(Long.valueOf(strID)));
+           
+       
+        return newMap;
+    } 
+
     public  Map<String, Object> getRequestsPaged(int start, int size, String category) {
-        List<RequestDTO> list = requestRepository.findByCategory(category, PageRequest.of(start, size,Direction.ASC, "deadline"));
+        List<Map<String, Object>> list = requestRepository.getRequestsPaged(start,size,category);
         Map<String, Object> newMap = new HashMap<String, Object>();
         newMap.put("requestList", list);
         List<List<String>> lists = new ArrayList<List<String>>();
         
         for(int i =0; i <list.size(); ++i ) {
-            long strID = list.get(i).getId();
-            lists.add(tagRepository.getTagsByRequestId(strID));
+            String strID = list.get(i).get("request_id").toString();
+            lists.add(tagRepository.getTagsByRequestId(Long.valueOf(strID)));
+            
+        }
+        newMap.put("tags", lists);
+        return newMap; 
+        
+    }
+
+    public  Map<String, Object> getAllPaged(int start, int size) {
+        List< Map<String, Object>> list = requestRepository.getAllPaged(start,size);
+        Map<String, Object> newMap = new HashMap<String, Object>();
+        newMap.put("requestList", list);
+        List<List<String>> lists = new ArrayList<List<String>>();
+        
+        for(int i =0; i <list.size(); ++i ) {
+            String strID = list.get(i).get("request_id").toString();
+            lists.add(tagRepository.getTagsByRequestId(Long.valueOf(strID)));
             
         }
         newMap.put("tags", lists);
