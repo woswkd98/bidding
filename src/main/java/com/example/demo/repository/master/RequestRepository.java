@@ -62,6 +62,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     public List<RequestDTO> findBy(Sort sort);
     public List<RequestDTO> findByCategory(String category, Pageable page);
     //public List<RequestDTO> findAllByUserId(long userId, Pageable page);
-   
+    public int countByCategory(String category);
+    
 
 }

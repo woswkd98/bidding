@@ -34,21 +34,20 @@ public class RequestController {
             return new ResponseEntity<>(requestService.delete(requestId), HttpStatus.OK);
       }
 
-      @RequestMapping(value = "/requests/{start}/{size}", method = RequestMethod.GET)
-      public ResponseEntity<?> getAllPaged(@PathVariable int start,   
-      @PathVariable int size) {
+      @RequestMapping(value = "/requests/{start}", method = RequestMethod.GET)
+      public ResponseEntity<?> getAllPaged(@PathVariable int start) {
 
             
-            return ResponseEntity.ok().body(requestService.getAllPaged(start, size));
+            return ResponseEntity.ok().body(requestService.getAllPaged(start));
       }
 
-      @RequestMapping(value = "/requests/category/{category}/{start}/{size}", method = RequestMethod.GET)
+      @RequestMapping(value = "/requests/category/{category}/{start}", method = RequestMethod.GET)
       public ResponseEntity<?> findByCategory(
             @PathVariable String category,
-            @PathVariable int start,   
-            @PathVariable int size
+            @PathVariable int start
+
       ) {
-            return ResponseEntity.ok().body( requestService.getRequestsPaged(start, size, category));
+            return ResponseEntity.ok().body( requestService.getRequestsPaged(start, category));
       }
 
       @RequestMapping(value = "/requests/tag/{tag}", method = RequestMethod.GET)

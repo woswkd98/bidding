@@ -43,14 +43,13 @@ const RequestList = ({ category }) => {
                 const tags = res.data.tags;
                 let count =0;
                 requests = requests.filter(element => {
-                    console.log("111111111111111111111");
-                    console.log(element.state);
+             
                     element.tags = tags[count++];
-                    console.log(element);
+                   
              
                     return 1;
                 });
-
+                console.log(1);
                 console.log(res.data);
                 setData(requests);
                 setLoading(false);
@@ -58,7 +57,7 @@ const RequestList = ({ category }) => {
 
         }
         else {
-        Axios.get('/requests/category/' + page)
+        Axios.get('/requests/category/' + category + "/" + page)
             .then(res => {
                 let requests = res.data.requestList;
                 const tags = res.data.tags;
@@ -68,7 +67,7 @@ const RequestList = ({ category }) => {
                     console.log(element.state);
                     element.tags = tags[count++];
                     console.log(element);
-       
+                    
                     return 1;
                 });
 

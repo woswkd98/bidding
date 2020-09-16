@@ -43,7 +43,16 @@ public class RequestService  {
     private final UserRepository userRepository;
     private Sort sortByDeadLine;
 
+    private final int size = 6;
     
+    private int calPage(int page, int size) {
+        return (page - 1) * size;
+    } 
+    private double calIdx(int count, int size) {
+        System.out.println("1q25125125125");
+        System.out.println(Math.ceil((double)count / size));
+        return Math.ceil((double)count / size);
+    }
 
     @PostConstruct
     public void init() {
@@ -147,12 +156,12 @@ public class RequestService  {
        
         newMap.put("tags",tagRepository.getTagsByRequestId(Long.valueOf(strID)));
            
-       
+        
         return newMap;
     } 
 
-    public  Map<String, Object> getRequestsPaged(int start, int size, String category) {
-        List<Map<String, Object>> list = requestRepository.getRequestsPaged(start,size,category);
+    public  Map<String, Object> getRequestsPaged(int start, String category) {
+        List<Map<String, Object>> list = requestRepository.getRequestsPaged(calPage(start,size),size,category);
         Map<String, Object> newMap = new HashMap<String, Object>();
         newMap.put("requestList", list);
         List<List<String>> lists = new ArrayList<List<String>>();
@@ -162,13 +171,15 @@ public class RequestService  {
             lists.add(tagRepository.getTagsByRequestId(Long.valueOf(strID)));
             
         }
+        
+        newMap.put("count",calIdx(requestRepository.countByCategory(category), size));
         newMap.put("tags", lists);
         return newMap; 
         
     }
 
-    public  Map<String, Object> getAllPaged(int start, int size) {
-        List< Map<String, Object>> list = requestRepository.getAllPaged(start,size);
+    public  Map<String, Object> getAllPaged(int start) {
+        List< Map<String, Object>> list = requestRepository.getAllPaged(calPage(start,size),size);
         Map<String, Object> newMap = new HashMap<String, Object>();
         newMap.put("requestList", list);
         List<List<String>> lists = new ArrayList<List<String>>();
@@ -178,6 +189,8 @@ public class RequestService  {
             lists.add(tagRepository.getTagsByRequestId(Long.valueOf(strID)));
             
         }
+        newMap.put("count", calIdx((int)requestRepository.count(),size));
+        newMap.put("tempCount", requestRepository.count());
         newMap.put("tags", lists);
         return newMap; 
         

@@ -120,7 +120,7 @@ public class UserService  {
     public User updatePassword(long userId, String pwd) {
         User user = repository.findById(userId).get();
 
-        if(!pattern.passwordChk(pwd, "", user.getUserEmail())) {
+        if(!pattern.passwordChk(pwd, jwtProduct.getSubject(user.getUserPassword()), user.getUserEmail())) {
             return null;
         }
 
@@ -175,7 +175,7 @@ public class UserService  {
         User user = repository.findByUserEmail(userEmail);
        // System.out.println(user.getId() + "  " + "aaaaaaaaaaaaaaaaaa");
        
-
+        
         if(user == null) {
 
             System.out.println("err2or");
