@@ -37,7 +37,8 @@ const RequestList = ({ category }) => {
         if(category === "모든 요청") {
             console.log(1231254);
             console.log(1231254);
-            Axios.get('/requests/'  + ((page - 1) * size) + "/"+ 10).then(res => {
+            
+            Axios.get('/requests/' + page).then(res => {
                 let requests = res.data.requestList;
                 const tags = res.data.tags;
                 let count =0;
@@ -57,7 +58,7 @@ const RequestList = ({ category }) => {
 
         }
         else {
-        Axios.get('/requests/category/' + category + "/" + ((page - 1) * size)  + "/"+ size)
+        Axios.get('/requests/category/' + page)
             .then(res => {
                 let requests = res.data.requestList;
                 const tags = res.data.tags;

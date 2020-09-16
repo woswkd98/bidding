@@ -92,9 +92,10 @@ public class SellerService {
            
         List<String> urls = new ArrayList<>();
         
-        List<Images> list = imageRepository.findAllById(Arrays.asList(deleteImages));
+       
 
         if(deleteImages != null) {
+            List<Images> list = imageRepository.findAllById(Arrays.asList(deleteImages));
             Images image = null;
             List<SellerHasImg> shi = null;
             for(int i = 0; i < list.size(); ++i) {

@@ -160,11 +160,12 @@ const ExpertRegister = ({ onClose, open, user_id }) => {
             .then(res => {
                 console.log(res.data);
                 console.log("sellers");
-                if(localStorage.getItem("is_seller") === 0)
-                    localStorage.setItem("is_seller", res.data);
+                
+                localStorage.setItem("is_seller", res.data.seller_id);
                 setLoading(false);
-                window.location.reload();
+             
                 onClose();
+                window.location.reload();
             })
             .catch(err => {
                 console.log('rest 에러!',err);

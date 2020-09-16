@@ -18,7 +18,7 @@ function App() {
     }
   }
   const is_seller = () => {
-    if (localStorage.getItem('is_seller') > 0) {
+    if (Number(localStorage.getItem('is_seller')) > 0 ) {
       return true
     } else {
       return false
