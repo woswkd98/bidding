@@ -69,17 +69,20 @@ const RequestDetail = (props) => {
     },[requestData])
    
     const choiceOneBid = (bid_id) => {
-        Axios.post('/biddings/chioce', {
-            biddingId: bid_id,
-            requestId: requestData.request_id
-        })
-            .then(() => {
-                alert('선택 완료');
-                history.replace('/user/mypage');
+        const AreYouSure = window.confirm('본 판매자를 선택하시겠습니까?');
+        if (AreYouSure) {
+            Axios.post('/biddings/chioce', {
+                biddingId: bid_id,
+                requestId: requestData.request_id
             })
-            .catch(err => {
-                console.log(err);
-            })
+                .then(() => {
+                    alert('선택 완료');
+                    history.replace('/user/mypage');
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
     }
 
     useEffect(() => {

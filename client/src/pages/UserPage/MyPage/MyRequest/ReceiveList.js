@@ -42,17 +42,19 @@ const ReceiveList = ({ requestData, bidData, onClickChoice, }) => {
     const classes = useStyles();
     console.log(bidData);
     const tradeCancel = () => {
-        console.log("Trand");
-        Axios.post('/biddings/tradeCancel',{
-            requestId: requestData.request_id,
-        })
-        .then(res => {
-            alert(res.data);
-            history.replace('/user/mypage');
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        const AreYouSure = window.confirm('취소하시겠습니까?');
+        if(AreYouSure){
+            Axios.post('/biddings/tradeCancel',{
+                requestId: requestData.request_id,
+            })
+            .then(res => {
+                alert(res.data);
+                history.replace('/user/mypage');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
     }
 
     return (
