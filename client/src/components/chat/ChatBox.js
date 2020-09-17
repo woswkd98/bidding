@@ -54,10 +54,7 @@ function ChatBox({ userInfo, avatarSrc }) {
     const clientRef = useRef();
     const objDiv = useRef();
 
-    const sendMessage = (e) => {
-
-        console.log(1234);
-        console.log(message);
+    const sendMessage = () => {
         try {
             let send_message = {
                 roomId: userInfo.room,
@@ -73,19 +70,20 @@ function ChatBox({ userInfo, avatarSrc }) {
     }
 
     useEffect(() => {
-
-        objDiv.current.scrollTop = objDiv.current.scrollHeight;
-        console.log(userInfo);
-        Axios.get("/chats/" + userInfo.room).then(res => {
-            console.log(res.data);
+        Axios.get("/chats/" + userInfo.room)
+        .then(res => {
             setData(res.data);
-            
         })
+        .catch(err => {
+            console.log(err);
+        })
+    }, [])
 
+    useEffect(() => {
+        objDiv.current.scrollTop = objDiv.current.scrollHeight;
     }, [newMessages])
 
 
-    
     const lastMessageList =data.map((data, i) => {
         return <ChatList key={i} data={data} userName={userName} avatarSrc={avatarSrc} />
     })
@@ -124,13 +122,13 @@ function ChatBox({ userInfo, avatarSrc }) {
             setMessage('');
         }
     }
-//  {lastMessageList}
-//{newMessageList}
+    
     return (
         <div className={classes.root}>
             <Container ref={objDiv} className={classes.container}>
                 <List className={classes.root}>
                   {lastMessageList}
+                  {newMessageList}
                 </List>
             </Container>
             <form onKeyDown={onSubmitForm}>
