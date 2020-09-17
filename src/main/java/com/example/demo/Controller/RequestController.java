@@ -1,7 +1,8 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Model.Request;
+import com.example.demo.DTO.RequestGetInfo;
 import com.example.demo.VO.RequestGetter;
+import com.example.demo.entity.Request;
 import com.example.demo.service.RequestService;
 
 import org.springframework.http.HttpStatus;
@@ -34,20 +35,36 @@ public class RequestController {
             return new ResponseEntity<>(requestService.delete(requestId), HttpStatus.OK);
       }
 
-      @RequestMapping(value = "/requests/{start}", method = RequestMethod.GET)
-      public ResponseEntity<?> getAllPaged(@PathVariable int start) {
+      @RequestMapping(value = "/requests/{start}/{sortKey}", method = RequestMethod.GET)
+      public ResponseEntity<?> getAllPaged(@PathVariable int start,  @PathVariable String sortKey) {
 
             
-            return ResponseEntity.ok().body(requestService.getAllPaged(start));
+            return ResponseEntity.ok().body(requestService.getAllPaged(start,sortKey));
       }
 
-      @RequestMapping(value = "/requests/category/{category}/{start}", method = RequestMethod.GET)
+      @RequestMapping(value = "/requests/category/{category}/{start}/{sortKey}", method = RequestMethod.GET)
       public ResponseEntity<?> findByCategory(
             @PathVariable String category,
-            @PathVariable int start
+            @PathVariable int start,
+            @PathVariable String sortKey
 
       ) {
-            return ResponseEntity.ok().body( requestService.getRequestsPaged(start, category));
+            return ResponseEntity.ok().body( requestService.getRequestsPaged(start, category,sortKey));
+      }
+
+      @RequestMapping(value = "/requests", method = RequestMethod.POST)
+      public ResponseEntity<?> getRequests(
+           @RequestBody RequestGetInfo requestGetInfo
+      ) {
+            System.out.println(requestGetInfo.toString());
+            return ResponseEntity.ok().body( 
+                  requestService.getRequestByTag(
+                        requestGetInfo.getPage(), 
+                        requestGetInfo.getCategory(),
+                        requestGetInfo.getOrderName(),
+                        requestGetInfo.getInputTag(),
+                        requestGetInfo.isOrderPos()
+                  ));
       }
 
       @RequestMapping(value = "/requests/tag/{tag}", method = RequestMethod.GET)

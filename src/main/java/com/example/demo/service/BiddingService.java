@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.example.demo.Config.GetTimeZone;
-import com.example.demo.Model.Bidding;
-import com.example.demo.Model.Request;
-import com.example.demo.Model.Seller;
+import com.example.demo.entity.Bidding;
+import com.example.demo.entity.Request;
+import com.example.demo.entity.Seller;
 import com.example.demo.repository.master.BiddingRepository;
 import com.example.demo.repository.master.RequestRepository;
 import com.example.demo.repository.master.SellerRepository;

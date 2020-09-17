@@ -22,3 +22,16 @@ RequestDTO로 가져올 때 Request에
 public String userEmail() {
     return user.getUserEmail(); // 엑세스 불가 
 }
+
+queryDsl 삽질
+나머지는 잘 되는데 q class를 읽지 못하는 현상이 있었다 (실행은 됨)
+이 때 pom에서 플러그인에 q파일을 아웃풋하는 곳과 똑같은 경로를
+ <sources>
+    <source>target/generated-sources/java</source>
+</sources>
+이런식으로 넣으면 된다 
+
+where 패치가 안먹혔었는데 
+java.lang.UnsupportedOperationException : null at java.util.Collections $ UnmodifiableMap.put (Collections.java:1457) ~ [na : 1.8.0_191] at com.querydsl.jpa.JPQLSerializer.visitConstant
+이런식의 에러였다 
+그리고 이 에러는 뜬금없이 queryDsl의 버전문제였다 거기서 version을 지우면 자동으로 맞게 깔아준다 

@@ -2,7 +2,8 @@ package com.example.demo.repository.master;
 
 import java.util.List;
 
-import com.example.demo.Model.Images;
+import com.example.demo.entity.Images;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

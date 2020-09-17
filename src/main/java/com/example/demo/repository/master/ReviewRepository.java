@@ -1,6 +1,6 @@
 package com.example.demo.repository.master;
 
-import com.example.demo.Model.Review;
+import com.example.demo.entity.Review;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

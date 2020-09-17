@@ -426,7 +426,6 @@ const ExpertRegister = ({ onClose, open, user_id }) => {
                     </DialogContent>
                     {activeStep === steps.length && (
                         <Paper square elevation={0} className={classes.resetContainer}>
-                            <Typography>이러쿵 저러쿵</Typography>
                             <Button variant="outlined" onClick={handleReset} className={classes.button}>
                                 처음으로
                             </Button>

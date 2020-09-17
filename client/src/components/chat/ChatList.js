@@ -46,7 +46,7 @@ function ChatList({ data, userName, avatarSrc }) {
     
     return (
         <>
-            {(userName === 'system') ?
+            {(data.userName === 'system') ?
     
                 <>
                     <div className={classes.systemStyle}>
@@ -54,7 +54,7 @@ function ChatList({ data, userName, avatarSrc }) {
                     </div>
                 </> :
           
-                (userName=== localStorage.getItem("userName")) ?
+                (data.userName=== userName) ?
                     <>
                         <ListItem alignItems="center" style={{ textAlign: 'right'}}>
                             <ListItemText
@@ -76,7 +76,7 @@ function ChatList({ data, userName, avatarSrc }) {
                                 <Avatar alt="Remy Sharp" src={avatarSrc} />
                             </ListItemAvatar>
                             <ListItemText
-                                primary={<small>{userName}</small>}
+                                primary={<small>{data.userName}</small>}
                                 secondary={
                                     <React.Fragment>
                                         <span className={classes.otherTextStyle}>

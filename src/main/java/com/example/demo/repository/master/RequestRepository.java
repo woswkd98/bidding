@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.demo.DTO.RequestDTO;
-import com.example.demo.Model.Request;
+import com.example.demo.entity.Request;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,13 +33,15 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     "from request r " + 
     "inner join user u on u.user_id = r.user_id "+
     "where r.category = :category " + 
+    "and r.state = '요청 진행중' "  +
     "limit :start, :size", nativeQuery = true)
     public List<Map<String, Object>> getRequestsPaged(int start, int size, String category);
 
     @Query(value = 
     "select r.*, u.user_name " +  
     "from request r " + 
-    "inner join user u on u.user_id = r.user_id "+
+    "inner join user u on u.user_id = r.user_id " +
+    "where r.state = '요청 진행중' " +
     "limit :start, :size", nativeQuery = true)
     public List<Map<String, Object>> getAllPaged(int start, int size);
 
@@ -62,7 +64,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     public List<RequestDTO> findBy(Sort sort);
     public List<RequestDTO> findByCategory(String category, Pageable page);
     //public List<RequestDTO> findAllByUserId(long userId, Pageable page);
-    public int countByCategory(String category);
+    public int countByCategoryAndState(String category, String State);
+    public int countByState(String state);
     
 
 }

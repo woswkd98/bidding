@@ -3,7 +3,7 @@ package com.example.demo.Controller;
 import java.util.List;
 import java.util.Map;
 
-import com.example.demo.Model.Review;
+import com.example.demo.entity.Review;
 import com.example.demo.service.ReviewService;
 
 import org.springframework.web.bind.annotation.PathVariable;

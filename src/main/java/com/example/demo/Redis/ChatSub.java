@@ -1,6 +1,6 @@
 package com.example.demo.Redis;
 
-import com.example.demo.Model.ChatMsg;
+import com.example.demo.entity.ChatMsg;
 import com.example.demo.repository.master.ChatRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

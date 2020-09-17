@@ -34,12 +34,19 @@ const useStyles = makeStyles((theme) => ({
   button: {
     color: 'rgb(104,104,106)',
     padding: 0,
+  },
+  smallText : {
+    color : 'red',
   }
 }));
 
 const JoinForm = ({ handleLogin }) => {
 
   const classes = useStyles();
+
+  const [nameChecked, setNameChecked] = useState(true);
+  const [emailChecked, setEmailChecked] = useState(true);
+  const [pwdChecked, setPwdChecked] = useState(true);
 
   const [userInfo, setInfo] = useState({
     name: '',
@@ -56,18 +63,46 @@ const JoinForm = ({ handleLogin }) => {
     })
   }
 
+  const {name,email,pwd} = userInfo;
+
+  const checkName = () => {
+    const reg = /^[가-힣]{2,}$/.test(name);
+    if(reg){
+      setNameChecked(true);
+    } else {
+      setNameChecked(false);
+    }
+  }
+
+  const checkEmail = () => {
+    const reg = /^[a-z0-9_+.-]+@([a-z0-9-]+\.)+[a-z0-9]{2,4}$/.test(email);
+    if(reg){
+      setEmailChecked(true);
+    } else {
+      setEmailChecked(false);
+    }
+  }
+
+  const checkPwd = () => {
+    const reg = /[A-Za-z0-9!@#$%^&*()-_+=]{8,}$/.test(pwd);
+    if(reg){
+      setPwdChecked(true);
+    } else {
+      setPwdChecked(false);
+    }
+  }
+
   const join = () => {
     Axios.put('/users', {
       userName: userInfo.name,
       userEmail: userInfo.email,
       userPassword: userInfo.pwd,
-
     })
     .then(res=>{
       if (res.data) {
         handleLogin();
       } else {
-        alert('이미 가입된 이메일입니다.')
+        alert(res.data)
       }
     })
     .catch(err=>{
@@ -77,11 +112,10 @@ const JoinForm = ({ handleLogin }) => {
 
   const onSubmitForm = (e) => {
     e.preventDefault();
-    if (userInfo.name === '' || userInfo.email === '' || userInfo.pwd === '') {
-      alert('빈 항목이 존재합니다.')
-      
-
-    } else {
+    checkName();
+    checkEmail();
+    checkPwd();
+    if (nameChecked && emailChecked && pwdChecked) {
       join();
     }
   }
@@ -106,8 +140,11 @@ const JoinForm = ({ handleLogin }) => {
               id="name"
               label="이름"
               autoFocus
+              autoComplete="name"
               onChange={onChangeInfo}
+              onBlur={checkName}
             />
+            {!nameChecked && <small className={classes.smallText}>2글자 이상의 한글로 작성해 주세요.</small>}
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -120,9 +157,10 @@ const JoinForm = ({ handleLogin }) => {
               autoComplete="email"
               type="email"
               onChange={onChangeInfo}
+              onBlur={checkEmail}
             />
+            {!emailChecked && <small className={classes.smallText}>올바른 이메일 형식이 아닙니다.</small>}
           </Grid>
-
           <Grid item xs={12}>
             <TextField
               variant="outlined"
@@ -134,10 +172,10 @@ const JoinForm = ({ handleLogin }) => {
               id="password"
               autoComplete="current-password"
               onChange={onChangeInfo}
+              onBlur={checkPwd}
             />
+            {!pwdChecked && <small className={classes.smallText}>8자 이상 입력해주세요.</small>}
           </Grid>
-     
-
         </Grid>
         <Button
           type="submit"

@@ -48,18 +48,19 @@ const Progress = ({ data }) => {
     }
 
     const tradeCancel = () => {
-        console.log("tradeCancel");
-        console.log(data.request_id);
-        Axios.post('/biddings/tradeCancel',{
-            requestId: data.request_id
-        })
-        .then(res => {
-            alert(res.data)
-            history.replace('/seller/mypage');
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        const AreYouSure = window.confirm('취소하시겠습니까?');
+        if(AreYouSure){
+            Axios.post('/biddings/tradeCancel',{
+                requestId: data.request_id
+            })
+            .then(res => {
+                alert(res.data)
+                history.replace('/seller/mypage');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
     }
 
 

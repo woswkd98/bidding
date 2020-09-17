@@ -31,18 +31,21 @@ const Watting = ({ data }) => {
     const history = useHistory();
 
     const user_id = useSelector(state => state.userAction.user_id)
-    console.log(data);
+
     const bidCancel = () => {
-        Axios.post('/biddings/biddingCancel',{
-            biddingId : data.request_id,
-        })
-        .then(res => {
-            alert(res.data);
-            history.push('/seller/mypage');
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        const AreYouSure = window.confirm("취소하시겠습니까?");
+        if(AreYouSure){
+            Axios.post('/biddings/biddingCancel',{
+                biddingId : data.request_id,
+            })
+            .then(res => {
+                alert(res.data);
+                history.push('/seller/mypage');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
     }
 
 

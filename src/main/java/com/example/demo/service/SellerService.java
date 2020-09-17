@@ -8,11 +8,10 @@ import java.util.Optional;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.Model.Images;
-import com.example.demo.Model.Seller;
-import com.example.demo.Model.SellerHasImg;
-import com.example.demo.Model.User;
-
+import com.example.demo.entity.Images;
+import com.example.demo.entity.Seller;
+import com.example.demo.entity.SellerHasImg;
+import com.example.demo.entity.User;
 import com.example.demo.repository.master.ImageRepository;
 import com.example.demo.repository.master.SellerHasImgRepo;
 import com.example.demo.repository.master.SellerRepository;

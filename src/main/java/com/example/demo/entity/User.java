@@ -1,5 +1,5 @@
 
-package com.example.demo.Model;
+package com.example.demo.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

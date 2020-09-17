@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
     backgroundImage: {
         backgroundImage: `url(${Background})`,
-        height: '786px',
+        height: '100vh',
         overflow: 'hidden',
         margin: 0,
         padding: 0,

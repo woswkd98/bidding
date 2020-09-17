@@ -1,10 +1,9 @@
-package com.example.demo.Model;
+package com.example.demo.entity;
 
 import java.io.Serializable;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import lombok.Getter;
@@ -12,24 +11,26 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+// 요청과 태그를 연결시켜주는 테이블 
+
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity(name = "sellerHasImg")
-@Table(name = "sellerHasImg")
-public class SellerHasImg {
+@Entity(name = "ReqHasTag")
+@Table(name = "ReqHasTag")
+public class ReqHasTag{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // mysql에 자동증가 기능있는데 타입이 위임이므로 걔로 위임
-    @Column(name = "sellerHasImg_id")
+    @Column(name = "reqHasTag_id")
     private Long id ;
 
     @ManyToOne
-    @JoinColumn(name = "images_id")
-    private Images images;
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
+    @JoinColumn(name = "request_id")
+    private Request request;
 }

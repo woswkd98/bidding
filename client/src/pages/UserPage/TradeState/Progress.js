@@ -36,30 +36,36 @@ const Progress = ({ data, requestData }) => {
     const history = useHistory();
 
     const tradeComplete = () => {
-        Axios.post('/biddings/complete',{
-            biddingId: data.bidding_id,
-            
-        })
-        .then(res=>{
-            alert(res.data);
-            history.replace('/user/mypage');
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+        const AreYouSure = window.confirm('거래가 완료되었습니까?');
+        if (AreYouSure) {
+            Axios.post('/biddings/complete',{
+                biddingId: data.bidding_id,
+                
+            })
+            .then(res=>{
+                alert(res.data);
+                history.replace('/user/mypage');
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        }
     }
 
     const tradeCancel = () => {
-        Axios.post('/biddings/tradeCancel',{
-            requestId: requestData.request_id,
-        })
-        .then(res=>{
-            alert(res.data);
-            history.replace('/user/mypage');
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+        const AreYouSure = window.confirm('취소하시겠습니까?');
+        if (AreYouSure) {
+            Axios.post('/biddings/tradeCancel',{
+                requestId: requestData.request_id,
+            })
+            .then(res=>{
+                alert(res.data);
+                history.replace('/user/mypage');
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        }
     }
 
 

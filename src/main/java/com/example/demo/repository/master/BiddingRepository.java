@@ -3,7 +3,7 @@ package com.example.demo.repository.master;
 import java.util.List;
 import java.util.Map;
 
-import com.example.demo.Model.Bidding;
+import com.example.demo.entity.Bidding;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
