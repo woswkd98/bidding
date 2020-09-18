@@ -118,7 +118,7 @@ const Profile = ({ profile, onClose, open, user_id }) => {
                                 {profile.exampleImages.map((obj, index) => {
                                     console.log(obj);
                                     return (
-                                        <GridListTile key={index} onClick={() => { onClickImageOpen(obj) }}>
+                                        <GridListTile key={index} onClick={() => { onClickImageOpen(obj.url) }}>
                                             <img src={obj.url} alt="비어있음" />
                                         </GridListTile>
                                     )

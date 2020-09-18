@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(
     basePackages = "com.example.demo.repository.master"
 )
+
 public class DataSourceConfig {
     
     private final JpaProperties jpaProperties;
@@ -54,7 +56,7 @@ public class DataSourceConfig {
 
             return builder.dataSource(this.dataSource())
                 .properties(properties)
-                .packages("com.example.demo.Model")
+                .packages("com.example.demo.entity")
                 .persistenceUnit("master")
                 .build();
     }

@@ -7,7 +7,8 @@ import com.example.demo.repository.master.UserRepository;
 import java.util.List;
 
 import com.example.demo.Config.GetTimeZone;
-import com.example.demo.Model.*;
+import com.example.demo.entity.*;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

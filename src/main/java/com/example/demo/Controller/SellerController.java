@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.example.demo.Model.Seller;
+import com.example.demo.entity.Seller;
 import com.example.demo.service.ReviewService;
 import com.example.demo.service.SellerService;
 

@@ -9,12 +9,12 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import com.example.demo.Config.EmailSender;
-import com.example.demo.Model.Images;
-import com.example.demo.Model.Seller;
-import com.example.demo.Model.User;
 import com.example.demo.VO.UserVO;
 import com.example.demo.common.JpaCrudServiceBase;
 import com.example.demo.common.RegexPattern;
+import com.example.demo.entity.Images;
+import com.example.demo.entity.Seller;
+import com.example.demo.entity.User;
 import com.example.demo.jwt.JwtProduct;
 import com.example.demo.repository.master.*;
 import com.nimbusds.jose.JOSEException;
@@ -120,7 +120,7 @@ public class UserService  {
     public User updatePassword(long userId, String pwd) {
         User user = repository.findById(userId).get();
 
-        if(!pattern.passwordChk(pwd, "", user.getUserEmail())) {
+        if(!pattern.passwordChk(pwd, jwtProduct.getSubject(user.getUserPassword()), user.getUserEmail())) {
             return null;
         }
 
@@ -175,7 +175,7 @@ public class UserService  {
         User user = repository.findByUserEmail(userEmail);
        // System.out.println(user.getId() + "  " + "aaaaaaaaaaaaaaaaaa");
        
-
+        
         if(user == null) {
 
             System.out.println("err2or");

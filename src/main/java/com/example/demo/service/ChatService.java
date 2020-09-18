@@ -26,8 +26,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.example.demo.Config.GetTimeZone;
-import com.example.demo.Model.ChatMsg;
 import com.example.demo.VO.*;
+import com.example.demo.entity.ChatMsg;
 import com.example.demo.repository.master.ChatRepository;
 
 @Component

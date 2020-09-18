@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import com.example.demo.Model.*;
+import com.example.demo.entity.*;
 @Repository
 public interface ChatRepository extends JpaRepository<ChatMsg, Long> {
     List<ChatMsg> findByRoomIdOrderByUploadAtAsc(String room_id);

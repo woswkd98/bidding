@@ -2,7 +2,7 @@ package com.example.demo.Redis;
 
 import java.util.Date;
 
-import com.example.demo.Model.ChatMsg;
+import com.example.demo.entity.ChatMsg;
 import com.example.demo.repository.master.ChatRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

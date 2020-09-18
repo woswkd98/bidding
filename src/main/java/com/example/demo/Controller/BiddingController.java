@@ -2,9 +2,9 @@ package com.example.demo.Controller;
 
 import java.util.Map;
 
-import com.example.demo.Model.Bidding;
 import com.example.demo.VO.BiddingVO;
 import com.example.demo.VO.RequestGetter;
+import com.example.demo.entity.Bidding;
 import com.example.demo.service.BiddingService;
 import com.example.demo.service.RequestService;
 

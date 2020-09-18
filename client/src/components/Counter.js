@@ -2,15 +2,14 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Axios from 'axios';
 
 const Counter = ({data}) => {
-    console.log("    console.log(data);");
-    console.log(data);
+
     const [start, setStart] = useState(parseInt(new Date().getTime() / 1000));
     const [end] = useState(parseInt(new Date(data.deadline) / 1000));
     
     const timeOver = useCallback(() => {
-        console.log(data);
+        
         Axios.patch('/requests/' + data.request_id).then(res => {
-            console.log(res);
+            
         })
         .catch(err=>{
             console.log(err);

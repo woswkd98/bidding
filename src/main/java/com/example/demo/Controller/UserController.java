@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.demo.Model.User;
 import com.example.demo.VO.UserVO;
+import com.example.demo.entity.User;
 import com.example.demo.service.ImageService;
 import com.example.demo.service.UserService;
 

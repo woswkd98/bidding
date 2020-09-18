@@ -40,45 +40,36 @@ const RequestList = ({ category }) => {
 
     const [tags, setTags] = useState([]);
 
+    const [sortValue,setSortValue] = useState('');
+
     const [loading, setLoading] = useState(true);
 
     const getAllRequests = useCallback(() => {
-        if (category === "모든 요청") {
-            Axios.get('/requests/' + page, {
-                tags: tags
-            })
-                .then(res => {
-                    let requests = res.data.requestList;
-                    const tags = res.data.tags;
-                    requests = requests.map((element, index) => {
-                        element.tags = tags[index];
-                    });
-                    setData(requests);
-                    setTotalPage(res.data.count);
-                    setLoading(false);
+        Axios.post('/requests', {
+            page: page,
+            category: category,
+            orderName: sortValue,
+            inputTag: tags,
+            orderPos: true,
+        })
+            .then(res => {
+                let requests = res.data.requestList;
+                const tags = res.data.tags;
+                let count = 0;
+                requests = requests.filter(element => {
+                    console.log(element);
+                    element.tags = tags[count++];
+                    return 1;
                 })
+                setData(requests);
+                setTotalPage(res.data.count);
+                setLoading(false);
 
-        }
-        else {
-            Axios.get('/requests/category/' + page, {
-                tags: tags
-            })
-                .then(res => {
-                    let requests = res.data.requestList;
-                    const tags = res.data.tags;
-                    requests = requests.map((element, index) => {
-                        element.tags = tags[index];
-                    });
-                    setData(requests);
-                    setTotalPage(res.data.count);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        }
-    }, [category, page,tags])
 
+            });
+        console.log(data);
+
+    }, [category, page])
 
     useEffect(() => {
         getAllRequests();
@@ -108,8 +99,6 @@ const RequestList = ({ category }) => {
     }
 
     const requestList = data.map((obj) => {
-
-
         return (
             <Grid key={obj.request_id} item xs={12} sm={12} md={6}>
                 <Request tags={tags} setTags={setTags} data={obj} checked={loading}></Request>
@@ -124,7 +113,7 @@ const RequestList = ({ category }) => {
             <br />
             <br />
             {tagSort}
-            <SortButton category={category} />
+            <SortButton sortValue={sortValue} setSortValue={setSortValue} />
             {totalPage
                 ?
                 <>

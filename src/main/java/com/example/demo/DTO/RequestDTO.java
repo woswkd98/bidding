@@ -6,10 +6,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import com.example.demo.Model.Tag;
-import com.example.demo.Model.User;
+import com.example.demo.entity.Tag;
+import com.example.demo.entity.User;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /*
@@ -35,30 +38,53 @@ import lombok.ToString;
 
 */
 
-
-public interface  RequestDTO {
-    public  String getCategory();
-    public String getDetail();
-    public Date getUploadAt();
-    public Long getId();
-    public Long getDeadline();
-    public String getHopeDate();
-    public String getState();
-    public User getUser();
-    default Map<String, Object> requestSender() {
-        Map<String, Object> map = new HashMap<String,Object>();
-        map.put("category", this.getCategory());
-        map.put("detail", this.getDetail());
-        map.put("hope_date", this.getHopeDate());
-        map.put("upload_at", this.getUploadAt());
-        map.put("state", this.getState());
-        map.put("request_id", this.getId());
-      
-        
-        return map;
-    }
-
+/*
+   
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // mysql에 자동증가 기능있는데 타입이 위임이므로 걔로 위임
+    @Column(name = "request_id", nullable = true, unique = true)
+    private Long id;
     
+    @Column(name = "category", nullable = false)
+    private String category;
+    
+    @Column(name = "detail", nullable = false)
+    private String detail;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "uploadAt", nullable = false)
+    private Date uploadAt;
+    
+    @Column(name = "deadline", nullable = false)
+    private Long deadline;
+
+
+    @Column(name = "hopeDate", nullable = true)
+    private String hopeDate;
+
+    @Column(name = "state", nullable = false)
+    private String state;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+*/
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class  RequestDTO {
+    private Long request_id;
+    private String category;
+    private String detail;
+    private Date upload_at;
+    private Long deadline;
+    private String hope_date;
+    private String state;
+    private String user_name;
+    private Long user_id;
 }
 
 

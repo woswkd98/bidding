@@ -87,7 +87,7 @@ public class JwtProduct {
         return true;
 
     }
-
+    
     public String getSubject(String token) {
         SignedJWT signedJWT = null;
         try {
@@ -107,7 +107,7 @@ public class JwtProduct {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return null;
+        return subject;
     }
 
 }

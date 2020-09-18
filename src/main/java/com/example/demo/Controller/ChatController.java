@@ -10,11 +10,11 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import com.example.demo.Config.GetTimeZone;
-import com.example.demo.Model.ChatMsg;
 import com.example.demo.Redis.ChatPub;
 import com.example.demo.Redis.ChatSub;
 import com.example.demo.VO.ChattingRoom;
 import com.example.demo.VO.SendingMsg;
+import com.example.demo.entity.ChatMsg;
 import com.example.demo.repository.master.ChatRepository;
 import com.example.demo.service.ChatService;
 
