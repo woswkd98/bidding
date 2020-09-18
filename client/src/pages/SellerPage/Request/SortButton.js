@@ -20,9 +20,10 @@ const SortButton = ({sortValue,setSortValue}) => {
 
     const onClickSort = (value,text) => {
         setSortValue(value);
-        setButtonText(sortValue);
+        setButtonText(text);
         setAnchorEl(null);
     }
+
 
     return (
         <>
@@ -43,10 +44,10 @@ const SortButton = ({sortValue,setSortValue}) => {
             }}
         >
             <List>
-                <ListItem button onClick={()=>{onClickSort('deadline')}}>
+                <ListItem button onClick={()=>{onClickSort('deadline',"마감임박순")}}>
                     <ListItemText primary="마감임박순" />
                 </ListItem>
-                <ListItem button onClick={()=>{onClickSort('uploadAt')}}>
+                <ListItem button onClick={()=>{onClickSort('uploadAt',"요청일순")}}>
                     <ListItemText primary="요청일순" />
                 </ListItem>
             </List>

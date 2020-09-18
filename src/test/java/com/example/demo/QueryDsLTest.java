@@ -1,6 +1,9 @@
 package com.example.demo;
 
+import static org.mockito.ArgumentMatchers.booleanThat;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +15,9 @@ import com.example.demo.entity.QReqHasTag;
 import com.example.demo.entity.QRequest;
 import com.example.demo.entity.QTag;
 import com.example.demo.entity.QUser;
-
+import com.example.demo.entity.Request;
 import com.example.demo.entity.User;
+import com.example.demo.repository.master.TagRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
@@ -21,6 +25,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.junit.jupiter.api.Test;
@@ -31,6 +36,7 @@ import org.springframework.stereotype.Component;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 @SpringBootTest
 
@@ -41,6 +47,14 @@ public class QueryDsLTest {
     @Autowired
     private  JPAQueryFactory jpaQueryFactory;
     
+    @Autowired
+    private TagRepository tagRepository;
+
+    private double calIdx(int count, int size) {
+        System.out.println(Math.ceil((double) count / size));
+        return Math.ceil((double) count / size);
+    }
+
     private OrderSpecifier<?> getOrder(Order order, String name) {
        
         Path<Object> path = Expressions.path(Object.class, QRequest.request, name);
@@ -124,14 +138,39 @@ public class QueryDsLTest {
     private String user_name;
     private Long user_id;
         */
-        QUser user = QUser.user; 
+      
+        QUser user = QUser.user;
         QRequest request = QRequest.request;
         QReqHasTag rht = QReqHasTag.reqHasTag;
+        Map<String, Object> newMap = new HashMap<String, Object>();
         QTag tag = QTag.tag;
-        List<String> tags = new ArrayList<>();
-        tags.add("bb");
-        //tags.add("aa");
-        List<RequestDTO> list = jpaQueryFactory.select(
+        Order order;
+        boolean OrderPos = true;
+        String orderName = "deadline"; 
+        String category = "모든 요청";
+        List<String> inputTag = new ArrayList<String>();
+        inputTag.add("리액트");
+        inputTag.add("네이티브");   
+        if (OrderPos) {
+            order = Order.ASC;
+        } else
+            order = Order.DESC;
+
+        OrderSpecifier<?> orderSpecifier = null;
+
+        if (orderName == null) {
+            orderSpecifier = getOrder(order, "deadline");
+        } else {
+            orderSpecifier = getOrder(order, orderName);
+        }
+        System.out.println("1");
+        BooleanExpression predicate = request.state.eq("요청 진행중");
+        System.out.println(category);
+        if (!category.equals("모든 요청")) {
+            predicate = predicate.and(request.category.eq(category));
+        }
+   
+        JPAQuery<RequestDTO> query = jpaQueryFactory.select(
             Projections.constructor(
                 RequestDTO.class, 
                 request.id,
@@ -145,27 +184,56 @@ public class QueryDsLTest {
                 request.user.id
             ))
             .from(request)
-            .innerJoin(request.user, user)
+            .innerJoin(request.user, user);
+        
+        JPAQuery<Request> countQuery = jpaQueryFactory.selectFrom(request);
+        
+        if(!inputTag.isEmpty()) {
+            System.out.println("------------");
+            System.out.println("inputTag.size()");
+            System.out.println(inputTag.size());
+            System.out.println("------------");
+            
+            query = query
             .innerJoin(request.request_Has_Tag,rht)
-            .innerJoin(rht.tag, tag)
-            .where(
-                request.state.eq("요청 진행중")
-                .and(tag.context.in(tags))
-            )
-            .offset((long)0)
+            .innerJoin(rht.tag, tag);
+            predicate = tag.context.eq(inputTag.get(0));
+         
+            countQuery = countQuery
+                .innerJoin(request.request_Has_Tag,rht)
+                .innerJoin(rht.tag, tag);
+            for(int i =1; i < inputTag.size(); ++i) {
+                predicate.or(tag.context.eq(inputTag.get(i)));
+            }
+
+        }
+        
+        List<RequestDTO> list = query
+            .where(predicate)
+            .offset(0)
             .limit(6)
-            .orderBy(getOrder(Order.ASC, "deadline"))
+            .orderBy(orderSpecifier)
             .fetch();
+            System.out.println("------------");
+            System.out.println("list.size()");
+            System.out.println(list.size());
+
+        newMap.put("requestList", list);
+        List<List<String>> lists = new ArrayList<List<String>>();
+        
         list.forEach(a -> {
-            
-            System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
-            System.out.println(a.getRequest_id());
+            System.out.println("------------");
             System.out.println(a.getCategory());
-            System.out.println(a.getDetail());
+            System.out.println(a.getRequest_id());
             
-            System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
+            lists.add(tagRepository.getTagsByRequestId(a.getRequest_id()));
         });
-       
+        
+        System.out.println(list.size());
+   
+
+        newMap.put("count", this.calIdx((int)countQuery.where(predicate).fetchCount(), 6));
+        newMap.put("tags", lists);
 
     }
 }

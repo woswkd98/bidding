@@ -62,8 +62,14 @@ function Request({ data, checked, tags, setTags }) {
 
     const classes = useStyles();
 
+    const addTagList = (obj) => {
+        if(tags.includes(obj)) return;
+        setTags([...tags, obj])
+
+    }
+
     const showTagList = data.tags.map((obj, index) => {
-        return <small onClick={() => { setTags([...tags, obj]) }} className={classes.tagStyle} key={index}>{obj}</small>
+        return <small onClick={() => { addTagList(obj) }} className={classes.tagStyle} key={index}>{obj}</small>
     })
 
     return (
@@ -72,7 +78,7 @@ function Request({ data, checked, tags, setTags }) {
                 <Card className={classes.card}>
                     <CardContent className={classes.cardContent}>
                         <Link className={classes.titleStyle} to={{ pathname: `/seller/request/${data._id}`, state: { data: data } }}>
-                            <small>{data.upload_at}</small><br />
+                            <small>{new Date( data.upload_at).toLocaleString()}</small><br />
                             <Typography variant="h5" gutterBottom>
                                 {data.user_name} 님의 {data.category} 요청
                                     </Typography>
