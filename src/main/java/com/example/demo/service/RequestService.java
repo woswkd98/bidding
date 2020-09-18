@@ -277,6 +277,7 @@ public class RequestService {
             .offset((long)this.calOffset(start, size))
             .limit(size)
             .orderBy(orderSpecifier)
+            .distinct()
             .fetch();
 
            
@@ -287,6 +288,8 @@ public class RequestService {
         list.forEach(a -> {
             System.out.println("------------");
             System.out.println(a.getCategory());
+            System.out.println(a.getRequest_id());
+            
             lists.add(tagRepository.getTagsByRequestId(a.getRequest_id()));
         });
         
