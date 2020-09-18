@@ -30,14 +30,12 @@ const Main = ({ request, seller, open, onClose, avatarSrc }) => {
     const classes = useStyles();
 
     const [data, setData] = useState({});
+
     const [loading, setLoading] = useState(true);
-    console.log(request, seller);
+
     const room_id = request + "/" + seller;
-    console.log("test");
-    console.log(request);
-    console.log(seller);
+
     const getMyRoom = useCallback(() => {
-        console.log(request);
         Axios.put('/rooms', {
             request_id: request,
             seller_id: seller,
@@ -63,7 +61,6 @@ const Main = ({ request, seller, open, onClose, avatarSrc }) => {
     }, [open, getMyRoom])
 
     if (!open) {
-        console.log(1);
         return <></>
     }
 

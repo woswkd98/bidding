@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Request from './Request';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -38,27 +38,21 @@ const RequestList = ({ category }) => {
 
     const [data, setData] = useState([]);
 
+    const [tags, setTags] = useState([]);
+
+    const [sortValue,setSortValue] = useState('');
+
     const [loading, setLoading] = useState(true);
 
     const getAllRequests = useCallback(() => {
-        /*
-        requestGetInfo.getPage(), 
-        requestGetInfo.getCategory(),
-        requestGetInfo.getOrderName(),
-        requestGetInfo.getInputTag(),
-        requestGetInfo.isOrderPos()
-        */
-       console.log(category + 11111111111111);
-        
-       Axios.post('/requests', {
-            page : page,
-            category : category,
-            orderName : "deadline",
-            inputTag : ["aa", "bb"],
-            orderPos : true,
+        Axios.post('/requests', {
+            page: page,
+            category: category,
+            orderName: sortValue,
+            inputTag: tags,
+            orderPos: true,
         })
-        .then(res => {
-                console.log(res.data);
+            .then(res => {
                 let requests = res.data.requestList;
                 const tags = res.data.tags;
                 let count = 0;
@@ -67,25 +61,24 @@ const RequestList = ({ category }) => {
                     element.tags = tags[count++];
                     return 1;
                 })
-            console.log(requests);
-            setData(requests);
-            setTotalPage(res.data.count);
-            setLoading(false);
-           
-            
-        });
-    console.log(data);
-      
-    },[category,page])
+                setData(requests);
+                setTotalPage(res.data.count);
+                setLoading(false);
+
+
+            });
+        console.log(data);
+
+    }, [category, page])
 
     useEffect(() => {
         getAllRequests();
         return () => {
             setLoading(true);
+            setTags([]);
         }
     }, [getAllRequests])
 
-    const [tags, setTags] = useState([]);
 
     const tagSort = tags.map((obj, index) => {
         return <Chip className={classes.tagStyle} key={index} label={obj} variant="default" size="small" onDelete={() => { onClickRemove(index) }} />
@@ -106,8 +99,6 @@ const RequestList = ({ category }) => {
     }
 
     const requestList = data.map((obj) => {
-        
-           
         return (
             <Grid key={obj.request_id} item xs={12} sm={12} md={6}>
                 <Request tags={tags} setTags={setTags} data={obj} checked={loading}></Request>
@@ -122,18 +113,18 @@ const RequestList = ({ category }) => {
             <br />
             <br />
             {tagSort}
-            <SortButton category={category} />
+            <SortButton sortValue={sortValue} setSortValue={setSortValue} />
             {totalPage
                 ?
                 <>
-                <Grid container spacing={3}>
-                    {requestList}
-                </Grid>
-                <Pagination className={classes.pagination} count={totalPage} page={page} onChange={handleChangePage} defaultPage={1} />
+                    <Grid container spacing={3}>
+                        {requestList}
+                    </Grid>
+                    <Pagination className={classes.pagination} count={totalPage} page={page} onChange={handleChangePage} defaultPage={1} />
                 </>
                 :
-                <Typography variant="h5" style={{marginTop:'40px'}}>진행중인 요청이 없습니다.</Typography>
-                }
+                <Typography variant="h5" style={{ marginTop: '40px' }}>진행중인 요청이 없습니다.</Typography>
+            }
         </Container>
     )
 

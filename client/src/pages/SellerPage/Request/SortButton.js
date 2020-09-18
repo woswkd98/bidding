@@ -2,11 +2,11 @@ import React,{useState} from 'react';
 import { Popover, Button, List, ListItem, ListItemText } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
-const SortButton = () => {
+const SortButton = ({sortValue,setSortValue}) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const [sortValue,setSortValue] = useState('정렬기준');
+    const [buttonText, setButtonText] = useState('');
 
     const open = Boolean(anchorEl);
 
@@ -18,15 +18,16 @@ const SortButton = () => {
         setAnchorEl(null);
     };
 
-    const onClickSort = (value) => {
+    const onClickSort = (value,text) => {
         setSortValue(value);
+        setButtonText(text);
         setAnchorEl(null);
     }
 
     return (
         <>
         <Button style={{ float: 'right' }} onClick={handleClick}>
-            {sortValue}<ArrowDropDownIcon />
+            {buttonText ? buttonText : '정렬 기준'}<ArrowDropDownIcon />
         </Button>
         <Popover
             open={open}
@@ -42,10 +43,10 @@ const SortButton = () => {
             }}
         >
             <List>
-                <ListItem button onClick={()=>{onClickSort('마감임박순')}}>
+                <ListItem button onClick={()=>{onClickSort('deadline','마감임박순')}}>
                     <ListItemText primary="마감임박순" />
                 </ListItem>
-                <ListItem button onClick={()=>{onClickSort('요청일순')}}>
+                <ListItem button onClick={()=>{onClickSort('uploadAt',"요청일순")}}>
                     <ListItemText primary="요청일순" />
                 </ListItem>
             </List>
