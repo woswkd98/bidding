@@ -54,11 +54,11 @@ const RequestList = ({ category }) => {
         })
             .then(res => {
                 let requests = res.data.requestList;
-                const tags = res.data.tags;
+                const temp = res.data.tags;
                 let count = 0;
                 requests = requests.filter(element => {
                     console.log(element);
-                    element.tags = tags[count++];
+                    element.tags = temp[count++];
                     return 1;
                 })
                 setData(requests);
@@ -69,13 +69,12 @@ const RequestList = ({ category }) => {
             });
         console.log(data);
 
-    }, [category, page])
+    }, [category, page,tags,sortValue])
 
     useEffect(() => {
         getAllRequests();
         return () => {
             setLoading(true);
-            setTags([]);
         }
     }, [getAllRequests])
 
