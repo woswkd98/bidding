@@ -72,6 +72,7 @@ function ChatBox({ userInfo, avatarSrc }) {
     useEffect(() => {
         Axios.get("/chats/" + userInfo.room)
         .then(res => {
+            console.log(res.data);
             setData(res.data);
         })
         .catch(err => {

@@ -67,7 +67,7 @@ const RequestDetail = (props) => {
                 console.log(err);
             })
     },[requestData])
-   
+    console.log(data);
     const choiceOneBid = (bid_id) => {
         const AreYouSure = window.confirm('본 판매자를 선택하시겠습니까?');
         if (AreYouSure) {
@@ -75,7 +75,8 @@ const RequestDetail = (props) => {
                 biddingId: bid_id,
                 requestId: requestData.request_id
             })
-                .then(() => {
+                .then((res) => {
+                    setData({data : res.data})
                     alert('선택 완료');
                     history.replace('/user/mypage');
                 })
@@ -102,13 +103,13 @@ const RequestDetail = (props) => {
     switch (requestData.state) {
         case '거래 진행중':
             const data1 = data.filter((obj) => {
-                return obj.state === '거래 진행중';
+                return obj.bid_state === '거래 진행중';
             })[0]
             return <Progress data={data1} requestData={requestData} />
 
         case '거래 완료':
             const data2 = data.filter((obj) => {
-                return obj.state === '거래 완료';
+                return obj.bid_state === '거래 완료';
             })[0]
             return <Complete data={data2} requestData={requestData} />
 
@@ -117,7 +118,7 @@ const RequestDetail = (props) => {
 
         default:
             const data3 = data.filter((obj) => {
-                return obj.state !== '입찰 취소';
+                return obj.bid_state !== '입찰 취소';
             })
             return <ReceiveList onClickChoice={choiceOneBid} bidData={data3} requestData={requestData} />
     }

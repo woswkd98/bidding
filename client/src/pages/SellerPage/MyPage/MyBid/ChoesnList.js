@@ -12,6 +12,10 @@ const ChoesnList = ({ data, handleChatOpen }) => {
     const [requestObj, setRequestObj] = useState(null);
     const history = useHistory();
 
+    useEffect(() => {
+        console.log(data)
+    }, [])
+
     const onClickChecked = (id) => {
         if (checked.includes(id)) {
             setChecked(
@@ -26,14 +30,13 @@ const ChoesnList = ({ data, handleChatOpen }) => {
             ])
         }
     }
-  
+    console.log(data);
     const ChosenList = data.filter((obj) => {
         console.log(obj);
-        return obj.state === '거래 진행중' || obj.state === '거래 대기중';
+        return obj.bid_state === '거래 진행중' || obj.bid_state === '거래 대기중';
     })
     
     const getRequestBySellerId =  (obj) => {
-        console.log("function");
 
         return  Axios.get("/requests/requestId/" + obj.request_id).then(res => {
             let temp2;
@@ -49,14 +52,12 @@ const ChoesnList = ({ data, handleChatOpen }) => {
         
        
     }
-   
-    console.log(" console.log(data);125125");
-    console.log(data);
-
+    console.log("ChosenList");
+    console.log(ChosenList);
 
     const MyChosenList = ChosenList.map((obj) => {
-        console.log(obj.upload_at);
-
+        console.log("MyChosenList = ChosenList.map((obj) => {")
+        console.log(obj);
         return (
             <Grid key={obj.request_id} style={{ margin: 'auto' }} item xs={12} sm={6} md={4}>
                 <Collapse in={checked.includes(obj.request_id)} collapsedHeight={88}>
@@ -79,7 +80,7 @@ const ChoesnList = ({ data, handleChatOpen }) => {
                                 <Grid item xs={12} md={6}>
                                     
                                     <Button  style={{ width: '100%' }} variant="outlined" onClick = {() => {
-                                        console.log(           getRequestBySellerId(obj));
+                                        getRequestBySellerId(obj);
                              
                                     }} >
                                             자세히

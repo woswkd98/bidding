@@ -54,7 +54,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
                 } 
                 
                 boolean value = hashOps.hasKey(UserService.getUserHashKey(), subject); // 아이디에 해당하는게 있는지
-                System.out.println("size  " + hashOps.entries(UserService.getUserHashKey()).size());
+                System.out.println("redis size  " + hashOps.entries(UserService.getUserHashKey()).size());
                 
                 if(value == false) System.out.println("value");
                 return value;

@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import RequestCard from '../../../components/RequestCard'
 import { Container, Grid, Typography,  makeStyles, Avatar, Button } from '@material-ui/core'
 import Rating from '@material-ui/lab/Rating';
 import PersonIcon from '@material-ui/icons/Person';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditIcon from '@material-ui/icons/Edit';
+import Review from '../Review';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,8 +35,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Complete = ({ data, requestData }) => {
-    console.log(data);
+
     const classes = useStyles();
+
+    const [open, setOpen] = useState(false);
+
+    const onClickReviewOpen = () => {
+        console.log(data,requestData);
+        // setOpen(true);
+    }
+
     return (
         <Container className={classes.root}>
             <Grid className={classes.gridStyle} container spacing={9}>
@@ -75,6 +84,7 @@ const Complete = ({ data, requestData }) => {
                     <Typography style={{ display: 'flex', alignItems: 'center' }}>
                         거래는 만족스러우셨나요? &nbsp;&nbsp;&nbsp;
                             <Button
+                            onClick={onClickReviewOpen}
                             variant="contained"
                             color="primary"
                             size="small"
@@ -86,6 +96,7 @@ const Complete = ({ data, requestData }) => {
                     </Typography>
                 </Grid>
             </Grid>
+            <Review open={open} setOpen={setOpen} seller_id={data.seller_id}/>
         </Container>
     )
 }

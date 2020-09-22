@@ -61,7 +61,7 @@ const BidCard = ({ data, requestData, onClickChoice }) => {
     const [user_id, setUser_id] = useState('');
 
     const handleClickOpen = (id, name) => {
-        console.log(id, name, data);
+        
         setOpen(true);
         setUser_id(id);
     };
@@ -69,14 +69,14 @@ const BidCard = ({ data, requestData, onClickChoice }) => {
     const handleClose = () => {
         setOpen(false);
     };
-
+    console.log(`data`, data);
 
     return (
         <Card size="large" color="primary" variant="outlined" className={classes.card}>
             <CardContent className={classes.cardContent}>
                 <Grid container>
                     <Grid item xs={4}>
-                        <Avatar onClick={() => { handleClickOpen(data.user_id, data.user_name) }} src={localStorage.getItem("profileImage")} className={classes.large} />
+                        <Avatar onClick={() => { handleClickOpen(data.user_id, data.user_name) }} src={data.bid_profile_url} className={classes.large} />
                     </Grid>
                     <Grid item xs={4} style={{ margin: 'auto' }} >
                         <Typography component="legend" >
@@ -87,7 +87,7 @@ const BidCard = ({ data, requestData, onClickChoice }) => {
                         {data.price}원
                     </Grid>
                     <Grid item xs={4} style={{ margin: 'auto' }}>
-                        <UserCommuButton request_id={requestData.request_id} seller_id={data.user_id} phone={data.phone} avatarSrc={localStorage.getItem("profileImage")} />
+                        <UserCommuButton request_id={requestData.request_id} seller_id={data.seller_id} phone={data.phone} avatarSrc={data.bid_profile_url} />
                         <Button onClick={() => { onClickChoice(data.bidding_id) }} style={{ width: '100%' }} variant="outlined">
                             의뢰하기
                         </Button>

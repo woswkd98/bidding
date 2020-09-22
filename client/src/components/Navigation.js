@@ -87,7 +87,7 @@ function Navigation() {
             <Container className={classes.root}>
                 <Toolbar>
                     <Typography className={classes.title}>
-                        HELL
+                        SELECTPERT
                     </Typography>
                     <div className={classes.navStyle}>
                         {loginMenu()}

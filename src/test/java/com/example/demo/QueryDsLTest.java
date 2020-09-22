@@ -49,7 +49,7 @@ public class QueryDsLTest {
     
     @Autowired
     private TagRepository tagRepository;
-
+   
     private double calIdx(int count, int size) {
         System.out.println(Math.ceil((double) count / size));
         return Math.ceil((double) count / size);
@@ -59,62 +59,6 @@ public class QueryDsLTest {
        
         Path<Object> path = Expressions.path(Object.class, QRequest.request, name);
         return new OrderSpecifier(order, path);
-    }
-    @Test
-    public void test() {
-        
-        QUser user = QUser.user; 
-        QRequest request = QRequest.request;
-        /*
-            "select r.*, u.user_name " +  
-    "from request r " + 
-    "inner join user u on u.user_id = r.user_id " +
-    "where r.state = '요청 진행중' " +
-    "limit :start, :size", nativeQuery = true)
-
-      private Long request_id;
-    private String category;
-    private String detail;
-    private Date upload_at;
-    private Long deadline;
-    private String hope_date;
-    private String state;
-    private String user_name;
-    private Long user_id;
-        */
-        List<RequestDTO> list = jpaQueryFactory.select(
-            Projections.constructor(
-                RequestDTO.class, 
-                request.id,
-                request.category,
-                request.detail,
-                request.uploadAt,
-                request.deadline,
-                request.hopeDate,
-                request.state,
-                request.user.userName,
-                request.user.id
-            ))
-            .from(request)
-            .innerJoin(request.user, user)
-            .where(request.state.eq("요청 진행중"))
-
-            
-            .offset((long)0)
-            .limit(6)
-            .orderBy(getOrder(Order.ASC, "deadline"))
-       
-            .fetch();
-            
-        list.forEach(a -> {
-            
-            System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
-            System.out.println(a.getCategory());
-
-            System.out.println("1111111111111111111111111111111111111111111111111111111111111111111");
-        });
-       
-
     }
 
     @Test
@@ -149,8 +93,8 @@ public class QueryDsLTest {
         String orderName = "deadline"; 
         String category = "모든 요청";
         List<String> inputTag = new ArrayList<String>();
-        inputTag.add("리액트");
-        inputTag.add("네이티브");   
+       // inputTag.add("리액트");
+      //  inputTag.add("네이티브");   
         if (OrderPos) {
             order = Order.ASC;
         } else
@@ -194,26 +138,26 @@ public class QueryDsLTest {
             System.out.println(inputTag.size());
             System.out.println("------------");
             
-            query = query
+            query
             .innerJoin(request.request_Has_Tag,rht)
-            .innerJoin(rht.tag, tag);
+            .innerJoin(rht.tag, tag).fetchJoin();
             predicate = tag.context.eq(inputTag.get(0));
          
-            countQuery = countQuery
+            countQuery
                 .innerJoin(request.request_Has_Tag,rht)
-                .innerJoin(rht.tag, tag);
+                .innerJoin(rht.tag, tag).fetchJoin();
             for(int i =1; i < inputTag.size(); ++i) {
                 predicate.or(tag.context.eq(inputTag.get(i)));
             }
 
         }
-        
-        List<RequestDTO> list = query
+   
+            List<RequestDTO> list  = query
             .where(predicate)
             .offset(0)
             .limit(6)
             .orderBy(orderSpecifier)
-            .fetch();
+            .fetchAll().fetch();
             System.out.println("------------");
             System.out.println("list.size()");
             System.out.println(list.size());
@@ -224,6 +168,7 @@ public class QueryDsLTest {
         list.forEach(a -> {
             System.out.println("------------");
             System.out.println(a.getCategory());
+            System.out.println(a.getState());
             System.out.println(a.getRequest_id());
             
             lists.add(tagRepository.getTagsByRequestId(a.getRequest_id()));

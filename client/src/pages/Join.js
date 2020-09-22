@@ -93,7 +93,7 @@ const JoinForm = ({ handleLogin }) => {
   }
 
   const join = () => {
-    Axios.put('/users', {
+    Axios.put('/join', {
       userName: userInfo.name,
       userEmail: userInfo.email,
       userPassword: userInfo.pwd,

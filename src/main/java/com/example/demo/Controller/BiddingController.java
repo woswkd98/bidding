@@ -86,12 +86,11 @@ public class BiddingController {
     public ResponseEntity<?> choice(
         @RequestBody Map<String, Object> map
     ) {
-        biddingService.choice(
+        return new ResponseEntity<>(biddingService.choice(
             Long.valueOf(map.get("requestId").toString()),
-            Long.valueOf(map.get("biddingId").toString())
-        );
-        return new ResponseEntity<>("deleteOk", HttpStatus.OK);
-    }
+            Long.valueOf(map.get("biddingId").toString())), HttpStatus.OK);
+        }
+ 
 
 
     @RequestMapping(value = "/biddings/complete", method = RequestMethod.POST)

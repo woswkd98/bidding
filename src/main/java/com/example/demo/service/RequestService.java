@@ -58,6 +58,7 @@ public class RequestService {
     private final ReqHasTagRepository reqHasTagRepository;
     private final UserRepository userRepository;
     private final JPAQueryFactory factory;
+
     private Sort sortByDeadLine;
     private OrderSpecifier orderbyRequest;
 
@@ -157,18 +158,36 @@ public class RequestService {
         return requestRepository.getOne(id);
     }
 
-    public Map<String, Object> getRequestByUserId(long id) {
-
-        List<Map<String, Object>> list = requestRepository.getRequestByUserId(id);
-        Map<String, Object> newMap = new HashMap<String, Object>();
-        newMap.put("requestList", list);
-        List<List<String>> lists = new ArrayList<List<String>>();
-        for (int i = 0; i < list.size(); ++i) {
-            String strID = list.get(i).get("request_id").toString();
-            lists.add(tagRepository.getTagsByRequestId(Long.valueOf(strID)));
-        }
-        newMap.put("tags", lists);
-
+    public Map<String,Object> getRequestByUserId(long id) {
+        QUser user = QUser.user;
+        QRequest request = QRequest.request;
+        QReqHasTag rht = QReqHasTag.reqHasTag;
+        Map<String, Object> newMap = new HashMap<>();
+        QTag tag = QTag.tag;
+        List<RequestDTO> list = factory.select(
+            Projections.constructor(
+                RequestDTO.class, 
+                request.id,
+                request.category,
+                request.detail,
+                request.uploadAt,
+                request.deadline,
+                request.hopeDate,
+                request.state,
+                request.user.userName,
+                request.user.id
+            ))
+            .from(request)
+            .innerJoin(request.user, user)
+            .where(request.user.id.eq(id))
+            .orderBy(getOrder(Order.ASC, "deadline"))
+            .fetch();
+            newMap.put("requestList", list);
+            List<List<String>> lists = new ArrayList<List<String>>();
+            list.forEach(a -> {
+                lists.add(tagRepository.getTagsByRequestId(a.getRequest_id()));
+            });
+            newMap.put("tags", lists);
         return newMap;
     }
 
@@ -190,6 +209,7 @@ public class RequestService {
         QReqHasTag rht = QReqHasTag.reqHasTag;
         Map<String, Object> newMap = new HashMap<>();
         QTag tag = QTag.tag;
+     
         List<RequestDTO> list = factory
                 .select(Projections.constructor(RequestDTO.class, request.id, request.category, request.detail,
                         request.uploadAt, request.deadline, request.hopeDate, request.state, request.user.userName,
@@ -212,98 +232,114 @@ public class RequestService {
 
     public Map<String, Object> getRequestByTag(int start, String category, String orderName, List<String> inputTag,
             boolean OrderPos) {
-  
-        QUser user = QUser.user;
-        QRequest request = QRequest.request;
-        QReqHasTag rht = QReqHasTag.reqHasTag;
-        Map<String, Object> newMap = new HashMap<String, Object>();
-        QTag tag = QTag.tag;
-        Order order;
-                
-        if (OrderPos) {
-            order = Order.ASC;
-        } else
-            order = Order.DESC;
+                System.out.println(start);
+                System.out.println(OrderPos);
+                System.out.println(inputTag);
+                System.out.println(category);
+                System.out.println(orderName);
+                QUser user = QUser.user;
+                QRequest request = QRequest.request;
+                QReqHasTag rht = QReqHasTag.reqHasTag;
+                Map<String, Object> newMap = new HashMap<String, Object>();
+                QTag tag = QTag.tag;
+                Order order;
+      
 
-        OrderSpecifier<?> orderSpecifier = null;
-
-        if (orderName == null) {
-            orderSpecifier = getOrder(order, "deadline");
-        } else {
-            orderSpecifier = getOrder(order, orderName);
-        }
-        System.out.println("1");
-        BooleanExpression predicate = request.state.eq("요청 진행중");
-        System.out.println(category);
-        if (!category.equals("모든 요청")) {
-            predicate = predicate.and(request.category.eq(category));
-        }
-   
-        JPAQuery<RequestDTO> query = factory.select(
-            Projections.constructor(
-                RequestDTO.class, 
-                request.id,
-                request.category,
-                request.detail,
-                request.uploadAt,
-                request.deadline,
-                request.hopeDate,
-                request.state,
-                request.user.userName,
-                request.user.id
-            ))
-            .from(request)
-            .innerJoin(request.user, user);
+                if (OrderPos) {
+                    order = Order.ASC;
+                } else
+                    order = Order.DESC;
         
-        JPAQuery<Request> countQuery = factory.selectFrom(request);
+                OrderSpecifier<?> orderSpecifier = null;
         
-        if(!inputTag.isEmpty()) {
-            System.out.println("------------");
-            System.out.println("inputTag.size()");
-            System.out.println(inputTag.size());
-            System.out.println("------------");
-            predicate = predicate.and(tag.context.in(inputTag));
-            query = query
-            .innerJoin(request.request_Has_Tag,rht)
-            .innerJoin(rht.tag, tag);
-
-            countQuery = countQuery
-                .innerJoin(request.request_Has_Tag,rht)
-                .innerJoin(rht.tag, tag);
-        }
-        
-        List<RequestDTO> list = query
-            .where(predicate)
-            .offset((long)this.calOffset(start, size))
-            .limit(size)
-            .orderBy(orderSpecifier)
-            .distinct()
-            .fetch();
-
+                if (orderName == null) {
+                    orderSpecifier = getOrder(order, "deadline");
+                } else {
+                    orderSpecifier = getOrder(order, orderName);
+                }
+      
+                BooleanExpression predicate = request.state.eq("요청 진행중");
+                System.out.println(category);
+                if (!category.equals("모든 요청")) {
+                    predicate = predicate.and(request.category.eq(category));
+                }
            
+                JPAQuery<RequestDTO> query = factory.select(
+                    Projections.constructor(
+                        RequestDTO.class, 
+                        request.id,
+                        request.category,
+                        request.detail,
+                        request.uploadAt,
+                        request.deadline,
+                        request.hopeDate,
+                        request.state,
+                        request.user.userName,
+                        request.user.id
 
-        newMap.put("requestList", list);
-        List<List<String>> lists = new ArrayList<List<String>>();
+                    ))
+                    .from(request)
+                    .innerJoin(request.user, user);
+                
+                JPAQuery<Request> countQuery = factory.selectFrom(request);
+                
+                if(!inputTag.isEmpty()) {
+                    System.out.println("------------");
+                    System.out.println("inputTag.size()");
+                    System.out.println(inputTag.size());
+                    System.out.println("------------");
+                    
+                    query = query
+                    .innerJoin(request.request_Has_Tag,rht)
+                    .innerJoin(rht.tag, tag);
+                    predicate = tag.context.eq(inputTag.get(0));
+                 
+                    countQuery = countQuery
+                        .innerJoin(request.request_Has_Tag,rht)
+                        .innerJoin(rht.tag, tag);
+                    for(int i =1; i < inputTag.size(); ++i) {
+                        predicate.or(tag.context.eq(inputTag.get(i)));
+                    }
         
-        list.forEach(a -> {
-            System.out.println("------------");
-            System.out.println(a.getCategory());
-            System.out.println(a.getRequest_id());
-            
-            lists.add(tagRepository.getTagsByRequestId(a.getRequest_id()));
-        });
+                }
+                
+                List<RequestDTO> list = query
+                    .where(predicate)
+                    .offset(calOffset(start, size))
+                    .limit(size)
+                    .orderBy(orderSpecifier)
+                    .fetch();
+                    System.out.println("------------");
+                    System.out.println("list.size()");
+                    System.out.println(list.size());
         
-   
-
-        newMap.put("count", this.calIdx((int)countQuery.where(predicate).fetchCount(), size));
-        newMap.put("tags", lists);
-        return newMap; 
+                newMap.put("requestList", list);
+                List<List<String>> lists = new ArrayList<List<String>>();
+                
+                list.forEach(a -> {
+                    System.out.println("------------");
+                    System.out.println(a.getCategory());
+                    System.out.println(a.getRequest_id());
+                    
+                    lists.add(tagRepository.getTagsByRequestId(a.getRequest_id()));
+                });
+                
+                System.out.println(list.size());
+           
+        
+                newMap.put("count", this.calIdx((int)countQuery.where(predicate).fetchCount(), 6));
+                newMap.put("tags", lists);
+                return newMap;
     }
 
 
 
     public  Map<String, Object> getAllPaged(int start,String orderName) {
+   
+        
         QUser user = QUser.user;
+
+
         QRequest request = QRequest.request;
         QReqHasTag rht = QReqHasTag.reqHasTag;
         Map<String,Object> newMap = new HashMap<>();
@@ -319,7 +355,8 @@ public class RequestService {
             request.hopeDate,
             request.state,
             request.user.userName,
-            request.user.id
+            request.user.id,
+            request.user.images.url
         ))
             .from(request)
             .innerJoin(request.user, user)
@@ -332,8 +369,11 @@ public class RequestService {
         List<List<String>> lists = new ArrayList<List<String>>();
         
         list.forEach(a -> {
+            System.out.println(list.get(0).getCategory()  +"11111111111111111111111111111111111111111");
             lists.add(tagRepository.getTagsByRequestId(a.getRequest_id()));
         });
+
+
          
         newMap.put("count", calIdx((int)requestRepository.countByState("요청 진행중"),size));
         newMap.put("tempCount", requestRepository.count());

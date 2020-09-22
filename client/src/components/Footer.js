@@ -8,7 +8,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        SelectPert
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -30,10 +30,10 @@ export default function Footer(){
       <div>
         <footer className={classes.footer}>
             <Typography variant="h6" align="center" gutterBottom>
-                Footer
+                SelectPert
             </Typography>
             <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-                Something here to give the footer a purpose!
+                고객과 전문가를 이어주는 it 서비스 매칭 플랫폼
             </Typography>
             <Copyright />
         </footer>

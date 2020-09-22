@@ -22,7 +22,9 @@ const ProfileModal = ({ onClose, open, user_id }) => {
     const getMyProfile = useCallback(() => {
         const sellerId = localStorage.getItem("is_seller")
         console.log(sellerId);
-        Axios.get('/sellers/' + sellerId)
+
+            if(Number(localStorage.getItem("is_seller")) > 0)  {
+            Axios.get('/sellers/' + sellerId)
             .then(res => {
                 console.log("profileModal");
                 console.log(res.data);
@@ -31,7 +33,22 @@ const ProfileModal = ({ onClose, open, user_id }) => {
             })
             .catch(err => {
                 console.log(err);
+            })}
+            
+            Axios.get('/users/' + localStorage.getItem("user_id"))
+            .then(res => {
+               
+                console.log(res.data);
+                setData(res.data);
+                setLoading(false);
             })
+            .catch(err => {
+                console.log(err);
+            })
+       
+            
+          
+        
     },[user_id])
 
 

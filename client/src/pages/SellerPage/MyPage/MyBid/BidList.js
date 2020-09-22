@@ -38,16 +38,22 @@ const BidList = () => {
     const getMyBids = useCallback(() => {
         Axios.get('/biddings/seller/' + localStorage.getItem("is_seller"))
             .then(res => {
+                console.log("    const getMyBids = useCallback(() => {");
+                console.log(res.data);
                 setData(res.data);
                 setLoading(false);
-            })
+            }).then()
             .catch(err => {
                 console.log(err);
             })
     },[user_id])
 
+ 
+
     useEffect(()=>{
         getMyBids();
+
+
         return () => {
             setLoading(true);
         }
@@ -58,10 +64,10 @@ const BidList = () => {
             <CircularProgress style={loadingStyle} />
         )
     }
-
-
+    console.log(data);
     return (
         <>
+        
             <Container>
                 <Typography variant="h5" gutterBottom>진행중인 거래</Typography>
                 <br />

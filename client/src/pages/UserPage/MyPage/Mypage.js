@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const MyPage = () => {
     const classes = useStyles();
     const userName = localStorage.getItem('userName');
+   
     const user_id = localStorage.getItem('user_id')
     const is_seller = useSelector(state => state.userAction.is_seller);
     const [open, setOpen] = useState(false);
@@ -56,12 +57,10 @@ const MyPage = () => {
         .catch(err=>{
             console.log(err);
 
-        })/*
+        })
         
-          <Button className={classes.buttonStyle} variant="outlined" onClick={handleClickOpen}>
-                        나의 프로필
-                    </Button>
-        */
+         
+        
     },[user_id])
 
     useEffect(()=>{
@@ -84,14 +83,16 @@ const MyPage = () => {
                     <Button className={classes.buttonStyle} variant="outlined" component={Link} to='/user/mypage'>
                         구매 정보
                     </Button>
-
+                    <Button className={classes.buttonStyle} variant="outlined" onClick={handleClickOpen}>
+                        나의 프로필
+                    </Button>
                   
                     <br />
                 </Grid>
                 <Grid item xs={12} md={9}>
                     <MyRequest />
                 </Grid>
-                { localStorage.getItem("is_seller") > 0 ? <ProfileModal name={userName} open={open} onClose={handleClose} user_id={user_id} />: null}
+                <ProfileModal name={userName} open={open} onClose={handleClose} user_id={user_id} />
             </Grid>
         </Container>
     )

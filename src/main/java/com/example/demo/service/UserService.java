@@ -18,6 +18,7 @@ import com.example.demo.entity.User;
 import com.example.demo.jwt.JwtProduct;
 import com.example.demo.repository.master.*;
 import com.nimbusds.jose.JOSEException;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
@@ -38,6 +39,7 @@ public class UserService  {
     private static final String userHashKey = "userHashKey";
     private static final String emailHashKey = "emailHashKey";
 
+    private final JPAQueryFactory factory;
     private final RedisTemplate redisTemplate;
     private final JwtProduct jwtProduct;
     private final EmailSender emailSender;
@@ -85,6 +87,11 @@ public class UserService  {
         return "이미지 없음";
     }
 
+    public String getUser(long userId) {
+   
+        return "이미지 없음";
+    }
+    
     public List<Map<String, Object>> getAll() {
         return repository.getAll();
     }
@@ -93,14 +100,14 @@ public class UserService  {
         return repository.getUserByEmail(email);
     }
     public String insert(UserVO vo) {
-        
+        /*
         if(!pattern.passwordChk(vo.getUserPassword(), "", vo.getUserEmail())) {
             return "비밀번호가 맞지 않는다";
         }
 
         if(!pattern.isValidEmail(vo.getUserEmail())) {
             return "이메일 형식이 아니다";
-        }
+        }*/
         User user = repository.findByUserEmail(vo.getUserEmail());
         if(user != null) return "이메일 중복";
         user = new User();

@@ -21,12 +21,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private String pre = "http://localhost:3000";
     @PostConstruct
     public void init() {
-       // jwtPaths.add("/**");
-        jwtPaths.add("/sellers/*");
-        jwtPaths.add("/bddings/*");
-        jwtPaths.add("/Chat/*");
-        jwtPaths.add("/rooms/*");
-        jwtPaths.add("/requests/*");
+        
+        jwtPaths.add("/sellers/**");
+        jwtPaths.add("/bddings/**");
+        jwtPaths.add("/Chat/**");
+        jwtPaths.add("/rooms/**");
+        jwtPaths.add("/requests/**");
+        jwtPaths.add("/users/**");
+
+        
     }
 
     @Override

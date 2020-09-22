@@ -34,7 +34,7 @@ const Progress = ({ data, requestData }) => {
     const classes = useStyles();
 
     const history = useHistory();
-
+    
     const tradeComplete = () => {
         const AreYouSure = window.confirm('거래가 완료되었습니까?');
         if (AreYouSure) {
@@ -67,8 +67,8 @@ const Progress = ({ data, requestData }) => {
             })
         }
     }
-
-
+    console.log(requestData);
+    console.log(data);
     return (
         <Container className={classes.root}>
             <Grid className={classes.gridStyle} container spacing={9}>
@@ -89,7 +89,7 @@ const Progress = ({ data, requestData }) => {
                         </Grid>
                         <Grid item xs={6} style={{ marginTop: '8px' }}>
                             <Typography variant="h6">
-                                {data.user_name}
+                                {requestData.user_name}
                             </Typography>
                             <Rating name="half-rating-read" value={1} precision={0.5} readOnly />
                             <Typography>3.5/5.0</Typography>
@@ -97,14 +97,14 @@ const Progress = ({ data, requestData }) => {
                     </Grid>
                     <List>
                         <ListItem>
-                            <ListItemText primary={`₩${data.price}`} primaryTypographyProps={{ variant: "h5" }} />
+                            <ListItemText primary={data.price} primaryTypographyProps={{ variant: "h5" }} />
                         </ListItem>
                         <ListItem>
                             <NavigateNextIcon fontSize="small" />&nbsp;&nbsp;
                             <ListItemText primary='가격은 상호 협의를 통해 변동이 있을 수 있습니다.' />
                         </ListItem>
                     </List>
-                    <UserCommuButton avatarSrc={localStorage.getItem("profileImage")} request_id={requestData.request_id} seller_id={data.seller_id} phone={data.phone} />
+                    <UserCommuButton avatarSrc={localStorage.getItem("profileImage")} request_id={requestData.request_id} seller_id={requestData.seller_id}/>
                     <Button onClick={tradeComplete} style={{ width: '100%' }} variant="outlined">
                         거래 완료
                     </Button>

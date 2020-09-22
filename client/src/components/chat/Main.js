@@ -78,6 +78,8 @@ const Main = ({ request, seller, open, onClose, avatarSrc }) => {
         <Dialog
             open={open}
             onClose={onClose}
+            fullWidth
+            maxWidth="sm"
             PaperComponent={PaperComponent}
             aria-labelledby="draggable-dialog-title"
         >

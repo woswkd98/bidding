@@ -72,8 +72,15 @@ public class UserController {
            System.out.println(userId);
         return new ResponseEntity<>(userService.getImage(userId), HttpStatus.OK);
     }
+    @RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUser(
+            @PathVariable long userId
+        ) { 
+           System.out.println(userId);
+        return new ResponseEntity<>(userService.getUser(userId), HttpStatus.OK);
+    }
     
-    @RequestMapping(value = "/users", method = RequestMethod.PUT)
+    @RequestMapping(value = "/join", method = RequestMethod.PUT)
     public ResponseEntity<?> insertUser(
         RequestEntity<UserVO> req
     ) { 
@@ -119,6 +126,7 @@ public class UserController {
         res.addCookie(cookie);   
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
+    
    
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public List<User> selectAll() {

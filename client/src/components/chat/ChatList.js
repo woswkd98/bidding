@@ -60,7 +60,7 @@ function ChatList({ data, userName, avatarSrc }) {
                             <ListItemText
                                 primary={
                                     <React.Fragment>
-                                        <small>{data.upload_At}</small>
+                                        <small>{ new Date(data.uploadAt).toLocaleTimeString()}</small>
                                 &nbsp;&nbsp;
                                 <span className={classes.myTextStyle}>
                                             {data.message}
@@ -83,7 +83,7 @@ function ChatList({ data, userName, avatarSrc }) {
                                             {data.message}
                                         </span>
                             &nbsp;&nbsp;
-                            <small>{data.upload_At}</small>
+                            <small>{new Date(data.uploadAt).toLocaleTimeString()}</small>
                                     </React.Fragment>
                                 }
                             />

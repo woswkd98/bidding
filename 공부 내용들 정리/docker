@@ -19,9 +19,19 @@ docker build --tag app:1 .
 docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=1234 mysql:8.0.21
 docker ps 컨테이너 조회 
 
-docker exec -it e420aa7c26c8 /bin/bash // 리눅스 콘솔접속 저기 16진수  id는 ps로 찾고
+create user 'scott'@'%' identified by 'tiger' ;
+grant all privileges on *.* to 'scott'@'%' with grant option;
+
+FLUSH PRIVILEGES;
+
+docker exec -it b9bba7e3b372 /bin/bash // 리눅스 콘솔접속 저기 16진수  id는 ps로 찾고
 mysql -u root -p // mysql 실행 비번 입력시 1234
 create database bidding; 데이터 베이스 생성 여기까지만 하면됨
 docker run --name redis -d -p 6379:6379 redis
 
-docker run -p 1234:1234 app y
+docker run -p 1234:1234 app:1
+java -jar javaApp.jar & 백그라운드 실행
+
+jenkins
+docker run -d -p 1234:1234 -v /home/jenkins:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -u root c85003278768
+

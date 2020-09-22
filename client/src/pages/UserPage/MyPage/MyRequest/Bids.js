@@ -20,6 +20,7 @@ const Bids = ({data,requestData,onClickChoice}) => {
     console.log("1111111111111111111");
     console.log(data);
     console.log(requestData);
+    
     const bids = data.map((obj) => {
         return (
             <BidCard key={obj.bidding_id} data={obj} requestData={requestData} onClickChoice={onClickChoice}/>

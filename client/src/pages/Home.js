@@ -83,13 +83,13 @@ const Home = () => {
             <Container>
                 <div className={classes.navBar}>
                     <Typography className={classes.title} onClick={handleHome} component={Button} variant="h4">
-                        HELL
+                        SELECTPERT
                     </Typography>
                 </div>
             </Container>
             <Container className={classes.heroContent} maxWidth="sm">
                 <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                    HELL
+                SelectPert
                 </Typography>
                 <Typography variant="h5" align="center" color="textSecondary" paragraph>
                     웹사이트, 간단한 등록으로 전문가를 찾아보세요.<br/>

@@ -6,12 +6,19 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.example.demo.Config.GetTimeZone;
+import com.example.demo.DTO.BiddingRequestGetter;
 import com.example.demo.entity.Bidding;
+import com.example.demo.entity.QBidding;
+import com.example.demo.entity.QRequest;
+import com.example.demo.entity.QSeller;
+import com.example.demo.entity.QUser;
 import com.example.demo.entity.Request;
 import com.example.demo.entity.Seller;
 import com.example.demo.repository.master.BiddingRepository;
 import com.example.demo.repository.master.RequestRepository;
 import com.example.demo.repository.master.SellerRepository;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.stereotype.Component;
@@ -26,7 +33,7 @@ public class BiddingService {
     private final BiddingRepository biddingRepository;
     private final SellerRepository sellerRepository;
     private final RequestRepository requestRepository;
-
+    private final JPAQueryFactory factory;
     public String insertBidding(
         int price,
         long sellerId,
@@ -62,12 +69,77 @@ public class BiddingService {
         return  biddingRepository.save(nBidding).getId().toString();
     }
 
-    public List<Map<String,Object>> getBiddingByRequest(long requestId) {
-        return biddingRepository.getBiddingByRequest(requestId);
+    public List<BiddingRequestGetter> getBiddingByRequest(long requestId) {
+        QBidding bidding = QBidding.bidding;
+        QRequest request = QRequest.request;
+        QUser user = QUser.user;
+        QSeller seller = QSeller.seller;
+  
+        return factory.select(Projections.constructor(BiddingRequestGetter.class, 
+        bidding.id,
+        bidding.price, 
+        request.id, 
+        seller.id, 
+        bidding.state, 
+        seller.user.userEmail,
+        seller.user.userName, 
+        seller.user.id, 
+        request.detail, 
+        request.category,
+        request.deadline,
+        request.hopeDate,
+        request.uploadAt, 
+        request.state,
+        seller.user.images.url)).from(request)
+            .innerJoin(request.user, user)
+            .innerJoin(request.bidding, bidding)
+            .innerJoin(bidding.seller, seller)
+            .where(request.id.eq(requestId)).fetch();
+        
         
     }
-    public List<Map<String,Object>> getBiddingBySellerId(long sellerId) {
-        return biddingRepository.getBiddingBySeller(sellerId);
+    public List<BiddingRequestGetter> getBiddingBySellerId(long sellerId) {
+           /*
+           private long bidding_id;
+    private int price;
+    private long request_id;
+    private long seller_id;
+    private String bid_state;
+    private String user_email;
+    private String user_name;
+    private String user_id;
+    private String detail;
+    private String category;
+    private String deadline;
+    private String hope_date;
+    private String upload_at;
+    private String request_state;
+        */
+        QBidding bidding = QBidding.bidding;
+        QRequest request = QRequest.request;
+        QUser user = QUser.user;
+        QSeller seller = QSeller.seller;
+  
+        return factory.select(Projections.constructor(BiddingRequestGetter.class, 
+        bidding.id,
+        bidding.price, 
+        request.id, 
+        seller.id, 
+        bidding.state, 
+        seller.user.userEmail,
+        seller.user.userName, 
+        seller.user.id, 
+        request.detail, 
+        request.category,
+        request.deadline,
+        request.hopeDate,
+        request.uploadAt, 
+        request.state,
+        seller.user.images.url)).from(request)
+            .innerJoin(request.user, user)
+            .innerJoin(request.bidding, bidding)
+            .innerJoin(bidding.seller, seller)
+            .where(seller.id.eq(sellerId)).fetch();
     }
 
     public void deleteBidding(long biddingId) {
@@ -90,23 +162,28 @@ public class BiddingService {
     } 
 
     @Transactional
-    public void choice(long requestId, long biddingId) {
+    public Bidding choice(long requestId, long biddingId) {
         Request request = requestRepository.findById(requestId).get();
         request.setState("거래 진행중");
         List<Bidding> list = request.getBidding();
         Bidding bidding = null;
+        Bidding temp = null;
         for(int i = 0; i < list.size(); ++i) {
 
             bidding =  list.get(i);
+
             if(bidding.getId() == biddingId) {
                 bidding.setState("거래 진행중");
+                temp = bidding;
             }
             else {
                 bidding.setState("유찰");
             }
             biddingRepository.save(bidding);
         }
-        requestRepository.save(request);
+      requestRepository.save(request);
+     
+      return temp;
     } 
 
     //7
@@ -129,6 +206,7 @@ public class BiddingService {
     //8
     @Transactional
     public void cancel(long biddingId) {
+        
         Bidding bidding = biddingRepository.findById(biddingId).get();
         if(bidding == null) {
             return;

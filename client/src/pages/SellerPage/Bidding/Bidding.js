@@ -40,7 +40,7 @@ const Bidding = ({ open, setOpen, data }) => {
             requestId: data.request_id,
             sellerId: localStorage.getItem("is_seller"),
             price: price,
-            state : " 거래 진행중",
+            state : "거래 진행중",
         })
         .then(res => {
             alert(res.data);
