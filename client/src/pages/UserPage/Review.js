@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import { Dialog } from '@material-ui/core';
 //별점별 코멘트
 const labels = {
     0.5: '별로예요',
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({ //css
     }
 }))
 //pros로 받아온 데이터(판매자,유저 정보)를 axios로 이용해서 서버로 보내기
-const Review = ({ user_id, seller_id, userName }) => { //판매자,구매자(리뷰 작성자) props
+const Review = ({ seller_id, open, setOpen }) => { //판매자,구매자(리뷰 작성자) props
     const [value, setValue] = React.useState(2);
     const [hover, setHover] = React.useState(-1);
     const [text, setText] = useState('');
@@ -40,6 +41,9 @@ const Review = ({ user_id, seller_id, userName }) => { //판매자,구매자(리
     // const user_id = '123123123';
     // const seller_id = '12314345';
     // const userName = '김동제'
+
+    const user_id = useSelector(state => state.userAction.user_id);
+    const userName = useSelector(state => state.userAction.userName);
 
     const classes = useStyles();
     //텍스트, 별점 값 
@@ -52,6 +56,10 @@ const Review = ({ user_id, seller_id, userName }) => { //판매자,구매자(리
     }
     const hoverCahngeHandler = (e, newValue) => {
         setValue(newValue);
+    }
+
+    const onClose = () => {
+        setOpen(false);
     }
 
     const submitHandler = (e) => {
@@ -90,56 +98,63 @@ const Review = ({ user_id, seller_id, userName }) => { //판매자,구매자(리
     // })
     //post 메서드로 userInfo.id, seller_id를 json 데이터로 전달받음
     return (
-        <div
-            className={classes.root}
-            style={{ maxWidth: "700px", margin: "2rem auto", textAlign: "center", marginBotton: "2rem" }}
+        <Dialog
+            open={open}
+            onClose={onClose}
+            fullWidth
+            maxWidth="lg"
+            aria-labelledby="draggable-dialog-title"
         >
-            <div>
-                <label><h2><b>판매자 만족도는 어떠신가요?</b></h2></label>
-                <Rating
-                    name="half-rating"
-                    defaultValue={2.5}
-                    precision={0.5}
-                    size="large"
-                    align="center"
-                    onChange={ratingChangeHandler}
-                    // onChange={(event,newValue)=>{
-                    //   setValue(newValue);
-                    // }}
-                    onChangeActive={(event, newHover) => {
-                        setHover(newHover);
-                    }}
+            <div
+                className={classes.root}
+                style={{ maxWidth: "700px", margin: "2rem auto", textAlign: "center", marginBotton: "2rem" }}
+            >
+                <div>
+                    <label><h2><b>판매자 만족도는 어떠신가요?</b></h2></label>
+                    <Rating
+                        name="half-rating"
+                        defaultValue={2.5}
+                        precision={0.5}
+                        size="large"
+                        align="center"
+                        onChange={ratingChangeHandler}
+                        // onChange={(event,newValue)=>{
+                        //   setValue(newValue);
+                        // }}
+                        onChangeActive={(event, newHover) => {
+                            setHover(newHover);
+                        }}
+                    />
+                    {value !== null && <Box ml={2}>{labels[hover !== -1 ? hover : value]}</Box>}
+                </div>
+
+                <br />
+                <br />
+                <hr width="700px" color="whitesmoke" />
+                <br />
+                <br />
+                <h2><b>이용 후기는 어떠신가요?</b></h2>
+                <TextareaAutosize
+                    rowsMin={2} //3줄 간격
+                    placeholder="만족도에 대한 후기를 남겨주세요"
+                    style={{ backgroundColor: "whitesmoke", borderColor: "lightgray" }}
+                    onChange={textChangeHandelr}
                 />
-                {value !== null && <Box ml={2}>{labels[hover !== -1 ? hover : value]}</Box>}
+                <br />
+                <br />
+                <div>
+                    <Button
+                        onClick={submitHandler}
+                        type="submit"
+                        style={{ maxWidth: "100px" }}
+                        variant="contained"
+                        color="primary"
+                    >
+                        등록
+                    </Button>
+                </div>
             </div>
-
-            <br />
-            <br />
-            <hr width="700px" color="whitesmoke" />
-            <br />
-            <br />
-            <h2><b>이용 후기는 어떠신가요?</b></h2>
-            <TextareaAutosize
-                rowsMin={2} //3줄 간격
-                placeholder="만족도에 대한 후기를 남겨주세요"
-                style={{ backgroundColor: "whitesmoke", borderColor: "lightgray" }}
-                onChange={textChangeHandelr}
-            />
-            <br />
-            <br />
-            <div>
-                <Button
-                    onClick={submitHandler}
-                    type="submit"
-                    style={{ maxWidth: "100px" }}
-                    variant="contained"
-                    color="primary"
-                >
-                    등록
-        </Button>
-            </div>
-
-        </div>
+        </Dialog>
     );
 }
 export default Review;

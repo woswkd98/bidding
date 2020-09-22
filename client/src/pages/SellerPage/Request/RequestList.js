@@ -73,7 +73,6 @@ const RequestList = ({ category,sortValue }) => {
         getAllRequests();
         return () => {
             setLoading(true);
-           
         }
     }, [getAllRequests])
 

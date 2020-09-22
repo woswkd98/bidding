@@ -39,7 +39,7 @@ const Main = ({ request, seller, open, onClose, avatarSrc }) => {
         Axios.put('/rooms', {
             request_id: request,
             seller_id: seller,
-            room_id : room_id
+            room_id: room_id
         })
             .then(res => {
                 setData(res.data);
@@ -48,14 +48,14 @@ const Main = ({ request, seller, open, onClose, avatarSrc }) => {
             .catch(err => {
                 console.log(err);
             })
-    },[request,seller])
+    }, [request, seller])
 
     useEffect(() => {
         if (open) {
             getMyRoom();
         }
         return () => {
-            if(request !== null) Axios.delete("/rooms/" + room_id);
+            if (request !== null) Axios.delete("/rooms/" + room_id);
             console.log('disconnect');
         }
     }, [open, getMyRoom])
@@ -79,6 +79,8 @@ const Main = ({ request, seller, open, onClose, avatarSrc }) => {
             open={open}
             onClose={onClose}
             PaperComponent={PaperComponent}
+            fullWidth
+            maxWidth="sm"
             aria-labelledby="draggable-dialog-title"
         >
             <DialogTitle style={{ cursor: 'move', padding: '0px' }} id="draggable-dialog-title">
@@ -97,7 +99,7 @@ const Main = ({ request, seller, open, onClose, avatarSrc }) => {
             <DialogContent style={{ backgroundColor: 'lightgray' }}>
                 <ChatBox userInfo={{
                     room: room_id
-                   // messages: data.messages,
+                    // messages: data.messages,
                 }}
                     avatarSrc={avatarSrc}
                 />
